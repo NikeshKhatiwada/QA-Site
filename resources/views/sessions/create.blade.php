@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello Bulma!</title>
-    <style>
-        @import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css";
-    </style>
-</head>
-<body>
-<section class="section">
+  </head>
+  <body>
+  <section class="section">
     <div class="container">
         <div class="columns is-flex is-desktop is-fullheight is-vcentered is-centered">
             <div class="column is-half">
@@ -18,11 +15,11 @@
                     <div class="control has-icons-left has-icons-right">
                         <input class="input" type="email" id="email" name="email" placeholder="Extra small">
                         <span class="icon is-small is-left">
-                            <i class="fas fa-envelope fa-xs"></i>
-                        </span>
+                    <i class="fas fa-envelope fa-xs"></i>
+                </span>
                         <span class="icon is-small is-right">
-                            <i class="fas fa-check fa-xs"></i>
-                        </span>
+                    <i class="fas fa-check fa-xs"></i>
+                </span>
                     </div>
                     <p class="help is-danger">This email is invalid</p>
                 </div>
@@ -32,11 +29,11 @@
                     <div class="control has-icons-left has-icons-right">
                         <input class="input" type="password" id="password" name="password" placeholder="Extra small">
                         <span class="icon is-small is-left">
-                            <i class="fas fa-envelope fa-xs"></i>
-                        </span>
+                    <i class="fas fa-envelope fa-xs"></i>
+                </span>
                         <span class="icon is-small is-right">
-                            <i class="fas fa-check fa-xs"></i>
-                        </span>
+                    <i class="fas fa-check fa-xs"></i>
+                </span>
                     </div>
                     <p class="help is-danger">This email is invalid</p>
                 </div>
@@ -52,6 +49,6 @@
             </div>
         </div>
     </div>
-</section>
-</body>
+  </section>
+  </body>
 </html>
