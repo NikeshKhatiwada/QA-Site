@@ -2922,6 +2922,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bulma_bulma_sass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bulma/bulma.sass */ "./node_modules/bulma/bulma.sass");
 /* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
 // require('./bootstrap');
+ //import 'bulma/css/bulma.css'
 
 
 
