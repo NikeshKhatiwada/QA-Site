@@ -39,14 +39,12 @@
     </div>
     <div class="column is-fullheight ml-1 mr-1 is-6-tablet-only is-8">
         <div class="is-clearfix">
-            <button class="button is-medium is-primary is-pulled-right js-modal-trigger" data-target="question-form-model">Ask New Question</button>
+            <button class="button is-medium is-primary is-pulled-right js-modal-trigger">Ask New Question</button>
         </div>
         <div class="modal" id="question-form-model">
             <div class="modal-background"></div>
             <div class="modal-card">
-                <form method="post" id="#question-form" action="/questions/create">
-
-                </form>
+                <form method="post" id="#question-form" action="/questions/create"></form>
             </div>
         </div>
         <hr>

@@ -17,10 +17,6 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/login', function() {
-    return view('sessions.create');
-})->middleware('guest');
-
 Route::get('/question/', function () {
     return view('questions.show');
 });
@@ -28,3 +24,11 @@ Route::get('/question/', function () {
 Route::get('/questions/create', function () {
     return view('questions.create');
 }); //->middleware('user');
+
+Route::get('/tags', function () {
+    return view('tags.index');
+});
+
+Route::get('/login', function() {
+    return view('sessions.create');
+})->middleware('guest');
