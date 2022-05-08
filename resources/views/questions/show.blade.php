@@ -13,11 +13,15 @@
 <div class="columns mt-1 mb-1 is-bordered">
     <div class="column is-fullheight ml-1 mr-1 is-8-tablet-only is-9">
         <div class="section box mt-4 mb-4">
+            <div class="tags are-small">
+                <a class="tag">JavaScript</a>
+                <a class="tag">NodeJs</a>
+            </div>
             <form id="follow" method="post" action="/follow" hidden>
                 <input type="text" class="input" title="questionId" id="questionId" name="questionId" value="Question" required>
             </form>
             <h3 class="title is-3">
-                How to embed images using javascript?
+                How to embed images using javascript in NodeJs?
                 <button class="button is-info is-pulled-right" type="submit" onclick="document.getElementById('follow').submit()">
                     Follow
                 </button>
@@ -122,7 +126,6 @@
 
         @for($i = 0; $i < 12; $i++)
             <div class="section box mt-4 mb-4">
-                <h6 class="title is-6">How to embed images using javascript?</h6>
                 <article class="media">
                     <div class="media-content">
                         <div class="columns">
