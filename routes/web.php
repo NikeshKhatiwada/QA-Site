@@ -14,9 +14,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
 Route::get('/login', function() {
     return view('sessions.create');
 })->middleware('guest');
+
+Route::get('/question/', function () {
+    return view('questions.show');
+});
+
+Route::get('/questions/create', function () {
+    return view('questions.create');
+}); //->middleware('user');
