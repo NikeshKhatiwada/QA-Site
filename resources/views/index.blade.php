@@ -10,7 +10,7 @@
 </head>
 <body>
 <x-navbar />
-<div class="columns is-8 mt-1 mb-1 is-bordered">
+<div class="columns mt-1 mb-1 is-bordered">
     <div class="column ml-3 is-fullheight is-3-tablet-only is-2 is-hidden-mobile">
         <div class="content is-medium" style="overflow: hidden">
             <h5 class="title is-5">Popular Tags</h5>
@@ -89,7 +89,7 @@
                         <div class="content">
                             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias asperiores fugit illum minima nesciunt quos. Amet architecto cupiditate eaque eligendi eveniet ipsum, iusto nemo nostrum odio perspiciatis, reprehenderit saepe! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere, quas, repellendus. Animi asperiores consequuntur debitis dolores earum exercitationem iste minima nulla officia officiis pariatur praesentium repellendus saepe sit veniam, voluptatibus.
                         </div>
-                        <div class="level">
+                        <div class="level is-mobile">
                             <div class="level-left">
                                 <form id="upvote" method="post" action="/upvote" hidden>
                                     <input type="text" class="input" title="questionId" id="questionId" name="questionId" value="Question" required>
