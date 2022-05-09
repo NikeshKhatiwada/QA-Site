@@ -29,6 +29,14 @@ Route::get('/tags', function () {
     return view('tags.index');
 });
 
+Route::get('/tag', function () {
+    return view('tags.show');
+});
+
+Route::get('/users', function () {
+    return view('users.index');
+});
+
 Route::get('/login', function() {
     return view('sessions.create');
 })->middleware('guest');
