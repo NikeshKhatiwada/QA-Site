@@ -36,7 +36,7 @@
                         </div>
                         <div class="column">
                             <div class="is-bold">Manish Subedi</div>
-                            <div>Answered 2 days ago</div>
+                            <div>Questioned 2 days ago</div>
                         </div>
                     </div>
 
