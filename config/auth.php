@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'web_moderator' => [
+            'driver' => 'session',
+            'provider' => 'moderators',
+        ]
     ],
 
     /*
@@ -64,6 +68,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+
+        'moderators' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Moderator::class,
+        ]
 
         // 'users' => [
         //     'driver' => 'database',
