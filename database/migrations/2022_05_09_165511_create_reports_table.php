@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->unsignedInteger('report_about_id');
-            $table->unsignedInteger('report_about_category');
+            $table->unsignedTinyInteger('report_about_category');
             $table->string('report_category');
             $table->text('report_description');
             $table->timestamps();
