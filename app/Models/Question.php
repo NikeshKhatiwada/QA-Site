@@ -40,4 +40,8 @@ class Question extends Model
     public function questionVotes() {
         return $this->belongsToMany(Question::class, 'users_vote_questions', 'user_id', 'question_id');
     }
+
+    public function questionReports() {
+        return $this->hasMany(Report::class, 'report_about_id')->where('report_about_category', '=', 1);
+    }
 }

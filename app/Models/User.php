@@ -66,6 +66,10 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    public function reports() {
+        return $this->hasMany(Report::class);
+    }
+
     public function followingUsers() {
         return $this->belongsToMany(User::class, 'users_follow_users', 'follower_id', 'following_id');
     }
@@ -92,5 +96,9 @@ class User extends Authenticatable
 
     public function likeComments() {
         return $this->belongsToMany(Comment::class, 'users_like_comments', 'comment_id', 'user_id');
+    }
+
+    public function userReports() {
+        return $this->hasMany(Report::class, 'report_about_id')->where('report_about_category', '=', 0);
     }
 }

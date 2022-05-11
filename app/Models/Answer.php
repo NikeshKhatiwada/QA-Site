@@ -35,4 +35,8 @@ class Answer extends Model
     public function answerVotes() {
         return $this->belongsToMany(Question::class, 'users_vote_answers', 'user_id', 'answer_id');
     }
+
+    public function answerReports() {
+        return $this->hasMany(Report::class, 'report_about_id')->where('report_about_category', '=', 2);
+    }
 }

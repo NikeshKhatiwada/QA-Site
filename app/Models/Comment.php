@@ -31,4 +31,8 @@ class Comment extends Model
     public function commentLikes() {
         return $this->belongsToMany(User::class, 'users_like_comments', 'user_id', 'comment_id');
     }
+
+    public function answerReports() {
+        return $this->hasMany(Report::class, 'report_about_id')->where('report_about_category', '=', 3);
+    }
 }
