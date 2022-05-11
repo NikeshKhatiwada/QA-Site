@@ -8,4 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'answer_id',
+        'description',
+    ];
+
+    protected $with = [
+        'user',
+        'answer'
+    ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function answer() {
+        return $this->belongsTo(Answer::class);
+    }
+
+    public function commentLikes() {
+        return $this->belongsToMany(User::class, 'users_like_comments', 'user_id', 'comment_id');
+    }
 }
