@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -41,5 +42,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+        File::cleanDirectory('storage/app/public/images/users');
     }
 };
