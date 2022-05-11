@@ -14,7 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users_follow_tags', function (Blueprint $table) {
-            $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('tag_id')->constrained('tags')->cascadeOnDelete();
+            $table->primary(['user_id', 'tag_id']);
             $table->timestamps();
         });
     }
