@@ -17,7 +17,10 @@ class TagFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'slug' => $this->faker->slug(),
+            'title' => $this->faker->word(),
+            'description' => $this->faker->paragraph(),
+            'image' => $this->faker->image("storage/app/public/images/users", 480, 640),
         ];
     }
 }

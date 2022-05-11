@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,10 @@ class QuestionFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => User::factory(),
+            'slug' => $this->faker->slug(),
+            'title' => $this->faker->sentence(),
+            'description' => $this->faker->paragraph(),
         ];
     }
 }
