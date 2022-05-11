@@ -14,7 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users_vote_questions', function (Blueprint $table) {
-            $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('question_id')->constrained('questions')->cascadeOnDelete();
+            $table->primary(['user_id', 'question_id']);
+            $table->tinyInteger('vote')->default(0);
             $table->timestamps();
         });
     }
