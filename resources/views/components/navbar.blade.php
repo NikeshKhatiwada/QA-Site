@@ -13,9 +13,9 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-            <a class="navbar-item" href="/index">Home</a>
+            <a class="navbar-item" href="/home">Home</a>
             <a class="navbar-item" href="/tags">Tags</a>
-            <a class="navbar-item" href="/tags">Users</a>
+            <a class="navbar-item" href="/users">Users</a>
 
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
