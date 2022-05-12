@@ -17,6 +17,7 @@
         "postcss": "^8.1.14"
     },
     "dependencies": {
+        "@creativebulma/bulma-tagsinput": "^1.0.3",
         "alpinejs": "^3.10.2",
         "sass": "^1.51.0",
         "sass-loader": "^12.6.0",

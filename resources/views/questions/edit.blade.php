@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Question Create Page</title>
+    <title>Question Edit Page</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link href="https://css.gg/css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -19,14 +19,15 @@
 <body>
 <x-navbar />
 <div class="container">
-    <h3 class="title is-3">Ask Question</h3>
+    <h3 class="title is-3">Edit Question</h3>
 
     <form method="post" action="">
         @csrf
+        @method('PATCH')
         <div class="field">
             <label class="label" for="title">Title</label>
             <div class="control">
-                <input class="input" type="text" id="title" name="title" placeholder="Question Title" required>
+                <input class="input" type="text" id="title" name="title" placeholder="Question Title" value="How to use Bulma CSS in Crystal?" required>
             </div>
             @error('title')
             <p class="help is-danger">{{ $message }}</p>
@@ -38,8 +39,8 @@
             <div class="is-multiple">
                 <select class="input js-tags-multiple" id="tags" name="tags" size="6" multiple="multiple" required>
                     <option value="asp.net">ASP.NET</option>
-                    <option value="crystal">Crystal</option>
-                    <option value="html">HTML</option>
+                    <option value="crystal" selected>Crystal</option>
+                    <option value="html" selected>HTML</option>
                     <option value="java">Java</option>
                 </select>
             </div>
@@ -51,7 +52,7 @@
         <div class="field">
             <label class="label" for="description">Description</label>
             <div class="control">
-                <textarea class="textarea" rows="10" id="description" name="description" placeholder="Question Description" required></textarea>
+                <textarea class="textarea" rows="10" id="description" name="description" placeholder="Question Description" required>I want to use bulma css in Crystal.</textarea>
             </div>
             @error('description')
             <p class="help is-danger">{{ $message }}</p>
@@ -66,8 +67,17 @@
             <div class="control">
                 <button type="reset" class="button is-warning" name="reset">Reset</button>
             </div>
+
+            <div class="control">
+                <button type="submit" class="button is-danger" name="delete" onclick="document.getElementById('delete-question').submit()">Delete</button>
+            </div>
         </div>
 
+    </form>
+
+    <form method="post" id="delete-question" action="/question/">
+        @csrf
+        @method('DELETE')
     </form>
 </div>
 </body>
