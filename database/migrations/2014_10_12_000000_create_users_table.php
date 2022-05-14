@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('first_name');
             $table->string('last_name');
+            $table->boolean('gender');
             $table->string('image');
             $table->text('about')->nullable();
             $table->unsignedInteger('score')->default(0);
