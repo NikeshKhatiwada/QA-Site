@@ -33,7 +33,7 @@ class Answer extends Model
     }
 
     public function answerVotes() {
-        return $this->belongsToMany(Question::class, 'users_vote_answers', 'user_id', 'answer_id');
+        return $this->belongsToMany(User::class, 'users_vote_answers', 'answer_id', 'user_id');
     }
 
     public function answerReports() {

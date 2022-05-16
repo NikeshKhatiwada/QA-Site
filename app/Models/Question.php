@@ -17,8 +17,7 @@ class Question extends Model
     ];
 
     protected $with = [
-        'user',
-        'tag'
+        'user'
     ];
 
     public function user() {
@@ -26,7 +25,7 @@ class Question extends Model
     }
 
     public function tags() {
-        return $this->belongsToMany(Tag::class, 'questions_tags', 'tag_id', 'question_id');
+        return $this->belongsToMany(Tag::class, 'questions_tags', 'question_id', 'tag_id');
     }
 
     public function answers() {
@@ -34,11 +33,11 @@ class Question extends Model
     }
 
     public function questionFollowers() {
-        return $this->belongsToMany(User::class, 'users_follow_questions', 'user_id', 'question_id');
+        return $this->belongsToMany(User::class, 'users_follow_questions', 'question_id', 'user_id');
     }
 
     public function questionVotes() {
-        return $this->belongsToMany(Question::class, 'users_vote_questions', 'user_id', 'question_id');
+        return $this->belongsToMany(User::class, 'users_vote_questions', 'question_id', 'user_id');
     }
 
     public function questionReports() {
