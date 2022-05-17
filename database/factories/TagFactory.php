@@ -20,7 +20,7 @@ class TagFactory extends Factory
             'slug' => $this->faker->slug(),
             'title' => $this->faker->word(),
             'description' => $this->faker->paragraph(),
-            'image' => $this->faker->image("storage/app/public/images/users", 480, 640),
+            'image' => $this->faker->image("storage/app/public/images/tags", 480, 640, null, false),
         ];
     }
 }
