@@ -13,12 +13,12 @@
     <div class="columns is-vcentered is-centered">
         <div class="column is-half box mt-6 mb-6">
             <h3 class="title is-3">Login Page</h3>
-            <form method="post" action="">
+            <form method="post" action="/sessions">
                 @csrf
                 <div class="field">
                     <label class="label" for="email">Email</label>
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input" type="email" id="email" name="email" placeholder="myemail@email.com">
+                        <input class="input" type="email" id="email" name="email" placeholder="myemail@email.com" value="{{ old('email') }}">
                         <span class="icon is-small is-left">
                             <i class="gg-inbox"></i>
                         </span>
@@ -34,7 +34,7 @@
                 <div class="field">
                     <label class="label" for="password">Password</label>
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input" type="password" id="password" name="password" placeholder="X12M?+abc().">
+                        <input class="input" type="password" id="password" name="password" placeholder="X12M?+abc()." value="{{ old('password') }}">
                         <span class="icon is-small is-left">
                             <i class="gg-lock"></i>
                         </span>
