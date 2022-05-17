@@ -39,39 +39,39 @@
     <div class="section box">
         <div class="tile is-ancestor">
             <div class="tile is-parent is-flex-wrap-wrap is-12">
-                @for($i = 0; $i < 18; $i++)
+                @foreach($users as $user)
                     <div class="tile is-4 has-fixed-size">
                         <div class="tile card ml-2 mr-2 mt-2 mb-2">
                             <div class="card-content">
                                 <div class="media">
                                     <div class="media-left">
                                         <figure class="image is-128x128">
-                                            <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                                            <img src="{{ asset('/storage/app/public/images/users/'.$user->image) }}" alt="{{ $user->first_name }} image">
                                         </figure>
                                     </div>
                                     <div class="media-content">
                                         <p class="title is-4">
-                                            <a href="/tag/css">SumitThapa1236</a>
+                                            <a href="/user/{{ $user->username }}/show">{{ $user->username }}</a>
                                         </p>
-                                        <p class="subtitle is-6">Jhapa, Nepal</p>
+                                        <p class="subtitle is-6">{{ $user->district.", ".$user->country }}</p>
                                         <p class="is-text is-6">
                                             Joined:
-                                            <time datetime="2015-3-6">2015-3-6</time>
+                                            <time>{{ $user->created_at->format('Y/m/d') }}</time>
                                         </p>
                                         <p class="is-text is-6">
                                             Last seen:
-                                            <time datetime="2021-3-6">2015-3-6</time>
+                                            <time datetime="2021-3-6">2015/3/6</time>
                                         </p>
                                     </div>
                                 </div>
 
                                 <div class="content">
-                                    <div class="is-text is-bold">Score: 678</div>
+                                    <div class="is-text is-bold">Score: {{ $user->score }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                @endfor
+                @endforeach
             </div>
         </div>
     </div>
