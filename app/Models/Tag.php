@@ -21,6 +21,6 @@ class Tag extends Model
     }
 
     public function tagFollowers() {
-        return $this->belongsToMany(User::class, 'users_follow_tags', 'tag_id', 'user_id');
+        return $this->belongsToMany(User::class, 'users_follow_tags', 'tag_id', 'user_id')->withTimestamps();
     }
 }
