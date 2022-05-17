@@ -18,67 +18,96 @@
                     <div class="media">
                         <div class="media-left">
                             <figure class="image is-128x128">
-                                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                                <img src="{{ asset('/storage/app/public/images/tags/'.$tag->image) }}" alt="{{ $tag->title }} image">
                             </figure>
                         </div>
                         <div class="media-content">
                             <p class="title is-4">
-                                <a href="/tag/css">JavaScript</a>
+                                {{ $tag->title }}
                             </p>
                             <p class="subtitle is-6">Language</p>
-                            <p class="is-text">Total Questions: 27</p>
-                            <p class="is-text">
-                                Last question asked:
-                                <time datetime="2022-1-1">Jan 1, 2022</time>
-                            </p>
+                            <p class="is-text">Total Questions: {{ $tag->questions->count() }}</p>
+                            <div class="is-text">
+                                @if(!$tag->questions->isEmpty())
+                                    Last question asked:
+                                    <time>{{ $tag->questions()->latest()->first()->created_at->format('Y/m/d') }}</time>
+                                @endif
+                            </div>
                         </div>
                     </div>
 
                     <div class="content">
                         <div class="title is-5">Description</div>
                         <div class="is-text">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, delectus impedit incidunt inventore magnam porro qui quod recusandae unde voluptate? Animi at doloribus esse, exercitationem mollitia nobis nostrum numquam similique?</p>
+                            <p>{{ $tag->description }}</p>
                         </div>
                     </div>
 
-                    <button class="button is-medium is-info">Follow</button>
+                    @if($tag->tagFollowers->where('id', auth('web')->id())->isEmpty())
+                        <form id="follow" method="post" action="/tag/follow">
+                            @csrf
+                            <input type="text" class="input is-hidden" title="tag_slug" id="tag_slug" name="tag_slug" value="{{ $tag->slug }}" required>
+                            <button class="button is-medium is-info" type="submit">Follow</button>
+                        </form>
+                    @elseif(!$tag->tagFollowers->where('id', auth('web')->id())->isEmpty())
+                        <form id="follow" method="post" action="/tag/unfollow">
+                            @csrf
+                            <input type="text" class="input is-hidden" title="tag_slug" id="tag_slug" name="tag_slug" value="{{ $tag->slug }}" required>
+                            <button class="button is-medium is-warning" type="submit">Unfollow</button>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>
         <hr>
         <div class="is-clearfix">
             <div class="field has-addons is-pulled-right">
+                <form id="show-questions" method="get" action="" hidden>
+                    <input type="radio" title="top" id="top" name="question_type" value="top" required>
+                    <input type="radio" title="new" id="new" name="question_type" value="new" required>
+                </form>
                 <p class="control">
-                    <button class="button is-medium">
+                    <button class="button is-medium" type="submit"
+                            onclick="document.getElementById('top').setAttribute('checked', 'checked');document.getElementById('show-questions').submit();">
                         <span>Top</span>
                     </button>
                 </p>
                 <p class="control">
-                    <button class="button is-medium">
+                    <button class="button is-medium" type="submit"
+                            onclick="document.getElementById('new').setAttribute('checked', 'checked');document.getElementById('show-questions').submit();">
                         <span>New</span>
                     </button>
                 </p>
             </div>
         </div>
-        @for($i = 0; $i < 12; $i++)
+        @foreach($questions as $question)
             <div class="section box mt-4 mb-4">
-                <h6 class="title is-6">How to embed images using javascript?</h6>
+                <h6 class="title is-6">
+                    <a href="/question/{{ $question->slug }}/show">{{ $question->title }}</a>
+                </h6>
+                @if(!$question->answers->isEmpty())
                 <article class="media">
                     <div class="media-content">
                         <div class="columns">
                             <div class="column is-2-tablet is-1-widescreen has-fixed-size">
                                 <figure class="image is-64x64">
-                                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
+                                    <img src="{{ asset('/storage/app/public/images/users/'.$question->top_answer->user->image) }}" alt="{{ $question->top_answer->user->first_name }} image">
                                 </figure>
                             </div>
                             <div class="column">
-                                <div class="is-bold">Sujit Pradhan</div>
-                                <div>Answered 2 days ago</div>
+                                <div class="is-bold">
+                                    <a href="/user/{{ $question->top_answer->user->username }}/show">
+                                        <strong>
+                                            {{ $question->top_answer->user->first_name." ".$question->top_answer->user->last_name }}
+                                        </strong>
+                                    </a>
+                                </div>
+                                <div>Answered {{ $question->top_answer->user->created_at->format('Y/m/d') }}</div>
                             </div>
                         </div>
 
                         <div class="content">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias asperiores fugit illum minima nesciunt quos. Amet architecto cupiditate eaque eligendi eveniet ipsum, iusto nemo nostrum odio perspiciatis, reprehenderit saepe! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere, quas, repellendus. Animi asperiores consequuntur debitis dolores earum exercitationem iste minima nulla officia officiis pariatur praesentium repellendus saepe sit veniam, voluptatibus.
+                            {{ $question->top_answer->description }}
                         </div>
                         <div class="level is-mobile">
                             <div class="level-left">
@@ -93,13 +122,13 @@
                                 <div class="level-item">
                                     <button class="button is-light" type="submit" onclick="document.getElementById('upvote').submit()">
                                         <i class="gg-chevron-up"></i>
-                                        711
+                                        {{ $question->top_answer->upvotes }}
                                     </button>
                                 </div>
                                 <div class="level-item">
                                     <button class="button is-light" type="submit" onclick="document.getElementById('downvote').submit()">
                                         <i class="gg-chevron-down"></i>
-                                        28
+                                        {{ $question->top_answer->downvotes }}
                                     </button>
                                 </div>
                             </div>
@@ -132,31 +161,37 @@
                             </div>
                         </article>
 
-                        <article class="media">
-                            <figure class="media-left">
-                                <p class="image is-48x48">
-                                    <img src="https://bulma.io/images/placeholders/96x96.png">
-                                </p>
-                            </figure>
-                            <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <strong>Kayli Eunice </strong>
-                                        <br>
-                                        Sed convallis scelerisque mauris, non pulvinar nunc mattis vel. Maecenas varius felis sit amet magna vestibulum euismod malesuada cursus libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus lacinia non nisl id feugiat.
-                                        <br>
-                                        <small>2 hrs</small> .
-                                        <small><a>Like</a> 24 </small> .
-                                        <small><a class="has-text-danger">Report</a></small>
+                        @foreach($question->top_answer->comments as $comment)
+                            <article class="media">
+                                <figure class="media-left">
+                                    <p class="image is-48x48">
+                                        <img src="https://bulma.io/images/placeholders/96x96.png">
                                     </p>
+                                </figure>
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <a href="/user/{{ $comment->user->username }}/show">
+                                                <strong>
+                                                    {{ $comment->user->first_name." ".$comment->user->last_name }}
+                                                </strong>
+                                            </a>
+                                            <br>
+                                            {{ $comment->description }}
+                                            <br>
+                                            <small>{{ $comment->created_at->format('Y/m/d') }}</small> .
+                                            <small><a>Like</a> {{ $comment->commentLikes()->count() }} </small> .
+                                            <small><a class="has-text-danger">Report</a></small>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </article>
+                            </article>
+                        @endforeach
                     </div>
                 </article>
-
+                @endif
             </div>
-        @endfor
+        @endforeach
     </div>
 
     <div class="column mr-3 is-fullheight is-3-tablet-only is-2">
