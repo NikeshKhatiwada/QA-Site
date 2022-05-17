@@ -79,23 +79,23 @@ class User extends Authenticatable
     }
 
     public function followingTags() {
-        return $this->belongsToMany(Tag::class, 'users_follow_tags', 'tag_id', 'user_id');
+        return $this->belongsToMany(Tag::class, 'users_follow_tags', 'user_id', 'tag_id')->withTimestamps();
     }
 
     public function followingQuestions() {
-        return $this->belongsToMany(Question::class, 'users_follow_questions', 'question_id', 'user_id');
+        return $this->belongsToMany(Question::class, 'users_follow_questions', 'user_id', 'question_id')->withTimestamps();
     }
 
     public function voteQuestions() {
-        return $this->belongsToMany(Question::class, 'users_vote_questions', 'question_id', 'user_id');
+        return $this->belongsToMany(Question::class, 'users_vote_questions', 'user_id', 'question_id');
     }
 
     public function voteAnswers() {
-        return $this->belongsToMany(Answer::class, 'users_vote_answers', 'answer_id', 'user_id');
+        return $this->belongsToMany(Answer::class, 'users_vote_answers', 'user_id', 'answer_id');
     }
 
     public function likeComments() {
-        return $this->belongsToMany(Comment::class, 'users_like_comments', 'comment_id', 'user_id');
+        return $this->belongsToMany(Comment::class, 'users_like_comments', 'user_id', 'comment_id');
     }
 
     public function userReports() {
