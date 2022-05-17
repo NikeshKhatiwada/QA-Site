@@ -33,13 +33,13 @@
                 <p class="control">
                     <button class="button is-medium" type="submit"
                             onclick="document.getElementById('top').setAttribute('checked', 'checked');document.getElementById('show-tags').submit();">
-                        <span>Top</span>
+                        <span>Top Posted</span>
                     </button>
                 </p>
                 <p class="control">
                     <button class="button is-medium" type="submit"
                             onclick="document.getElementById('new').setAttribute('checked', 'checked');document.getElementById('show-tags').submit();">
-                        <span>New</span>
+                        <span>Newly Posted</span>
                     </button>
                 </p>
             </div>
