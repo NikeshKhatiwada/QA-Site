@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tags Page</title>
+    <title>User Page</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link href="https://css.gg/css" rel="stylesheet">
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -122,13 +122,19 @@
     <hr>
         <div class="is-clearfix">
             <div class="field has-addons is-pulled-right">
+                <form id="show-QA" method="get" action="" hidden>
+                    <input type="radio" title="questions" id="questions" name="qORa" value="questions" required>
+                    <input type="radio" title="answers" id="answers" name="qORa" value="answers" required>
+                </form>
                 <p class="control">
-                    <button class="button is-medium">
+                    <button class="button is-medium" type="submit"
+                            onclick="document.getElementById('questions').setAttribute('checked', 'checked');document.getElementById('show-QA').submit();">
                         <span>Questions</span>
                     </button>
                 </p>
                 <p class="control">
-                    <button class="button is-medium">
+                    <button class="button is-medium" type="submit"
+                            onclick="document.getElementById('answers').setAttribute('checked', 'checked');document.getElementById('show-QA').submit();">
                         <span>Answers</span>
                     </button>
                 </p>
