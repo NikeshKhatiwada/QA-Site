@@ -182,7 +182,7 @@
                                                 <small>{{ $comment->created_at->format('Y/m/d') }}</small> .
                                                 <small>
                                                     <a>
-                                                        {{ $comment->commentLikes()->where('user_id', auth('web')->id())->exists()?'Like':'Unlike' }}
+                                                        {{ $comment->commentLikes()->where('user_id', auth('web')->id())->exists()?'Unlike':'Like' }}
                                                     </a>
                                                     {{ $comment->commentLikes()->count() }} </small> .
                                                 <small>
