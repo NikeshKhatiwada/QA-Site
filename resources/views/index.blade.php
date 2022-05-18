@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login Page</title>
+    <title>Home Page</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link href="https://css.gg/css" rel="stylesheet">
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -40,103 +40,127 @@
             </p>
         </div>
     </div>
-    @for($i = 0; $i < 12; $i++)
+    @foreach($questions as $question)
+        <script>{{ $question }}</script>
         <div class="section box mt-4 mb-4">
-            <h6 class="title is-6">How to embed images using javascript?</h6>
-            <article class="media">
-                <div class="media-content">
-                    <div class="columns">
-                        <div class="column is-2-tablet is-1-widescreen has-fixed-size">
-                            <figure class="image is-64x64">
-                                <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
-                            </figure>
+            <h6 class="title is-6">
+                <a href="/question/{{ $question->slug }}/show">
+                    {{ $question->title }}
+                </a>
+            </h6>
+            @if(!$question->answers->isEmpty())
+                <article class="media">
+                    <div class="media-content">
+                        <div class="columns">
+                            <div class="column is-2-tablet is-1-widescreen has-fixed-size">
+                                <figure class="image is-64x64">
+                                    <img src="{{ asset('/storage/app/public/images/users/'.$question->top_answer->user->image) }}" alt="{{ $question->top_answer->user->first_name }} image">
+                                </figure>
+                            </div>
+                            <div class="column">
+                                <div class="is-bold">
+                                    <a href="/user/{{ $question->top_answer->user->username }}/show">
+                                        <strong>
+                                            {{ $question->top_answer->user->first_name." ".$question->top_answer->user->last_name }}
+                                        </strong>
+                                    </a>
+                                </div>
+                                <div>Answered {{ $question->top_answer->user->created_at->format('Y/m/d') }}</div>
+                            </div>
                         </div>
-                        <div class="column">
-                            <div class="is-bold">Sujit Pradhan</div>
-                            <div>Answered 2 days ago</div>
-                        </div>
-                    </div>
 
-                    <div class="content">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias asperiores fugit illum minima nesciunt quos. Amet architecto cupiditate eaque eligendi eveniet ipsum, iusto nemo nostrum odio perspiciatis, reprehenderit saepe! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere, quas, repellendus. Animi asperiores consequuntur debitis dolores earum exercitationem iste minima nulla officia officiis pariatur praesentium repellendus saepe sit veniam, voluptatibus.
-                    </div>
-                    <div class="level is-mobile">
-                        <div class="level-left">
-                            <form id="upvote" method="post" action="/upvote" hidden>
-                                <input type="text" class="input" title="questionId" id="questionId" name="questionId" value="Question" required>
-                                <input type="text" class="input" title="answerId" id="answerId" name="answerId" value="Answer" required>
-                            </form>
-                            <form id="downvote" method="post" action="/downvote" hidden>
-                                <input type="text" class="input" title="questionId" id="questionId" name="questionId" value="Question" required>
-                                <input type="text" class="input" title="answerId" id="answerId" name="answerId" value="Answer" required>
-                            </form>
-                            <div class="level-item">
-                                <button class="button is-light" type="submit" onclick="document.getElementById('upvote').submit()">
-                                    <i class="gg-chevron-up"></i>
-                                    711
-                                </button>
-                            </div>
-                            <div class="level-item">
-                                <button class="button is-light" type="submit" onclick="document.getElementById('downvote').submit()">
-                                    <i class="gg-chevron-down"></i>
-                                    28
-                                </button>
-                            </div>
+                        <div class="content">
+                            {{ $question->top_answer->description }}
                         </div>
-                        <div class="level-right">
-                            <div class="level-item">
-                                <a href="">
-                                    <button class="button is-danger" type="button">
-                                        <i class="gg-flag"></i>
-                                        Report
-                                    </button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <article class="media">
-                        <figure class="media-left">
-                            <p class="image is-48x48">
-                                <img src="https://bulma.io/images/placeholders/128x128.png">
-                            </p>
-                        </figure>
-                        <div class="media-content">
-                            <div class="field">
-                                <form method="post" action="">
-                                    <p class="control">
-                                        <input type="text" class="input" title="comment" id="comment" name="comment" placeholder="Write a comment" required>
-                                    </p>
+                        <div class="level is-mobile">
+                            <div class="level-left">
+                                <form id="upvote" method="post" action="/upvote" hidden>
+                                    <input type="text" class="input" title="questionId" id="questionId" name="questionId" value="Question" required>
+                                    <input type="text" class="input" title="answerId" id="answerId" name="answerId" value="Answer" required>
                                 </form>
+                                <form id="downvote" method="post" action="/downvote" hidden>
+                                    <input type="text" class="input" title="questionId" id="questionId" name="questionId" value="Question" required>
+                                    <input type="text" class="input" title="answerId" id="answerId" name="answerId" value="Answer" required>
+                                </form>
+                                <div class="level-item">
+                                    <button class="button is-light {{ $question->top_answer->vote===1?'is-info':'' }}" type="submit" onclick="document.getElementById('upvote').submit()">
+                                        <i class="gg-chevron-up"></i>
+                                        {{ $question->top_answer->upvotes }}
+                                    </button>
+                                </div>
+                                <div class="level-item">
+                                    <button class="button is-light {{ $question->top_answer->vote===-1?'is-info':'' }}" type="submit" onclick="document.getElementById('downvote').submit()">
+                                        <i class="gg-chevron-down"></i>
+                                        {{ $question->top_answer->downvotes }}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <a href="">
+                                        <button class="button is-danger" type="button">
+                                            <i class="gg-flag"></i>
+                                            Report
+                                        </button>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </article>
 
-                    <article class="media">
-                        <figure class="media-left">
-                            <p class="image is-48x48">
-                                <img src="https://bulma.io/images/placeholders/96x96.png">
-                            </p>
-                        </figure>
-                        <div class="media-content">
-                            <div class="content">
-                                <p>
-                                    <strong>Kayli Eunice </strong>
-                                    <br>
-                                    Sed convallis scelerisque mauris, non pulvinar nunc mattis vel. Maecenas varius felis sit amet magna vestibulum euismod malesuada cursus libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus lacinia non nisl id feugiat.
-                                    <br>
-                                    <small>2 hrs</small> .
-                                    <small><a>Like</a> 24 </small> .
-                                    <small><a class="has-text-danger">Report</a></small>
+                        <article class="media">
+                            <figure class="media-left">
+                                <p class="image is-48x48">
+                                    <img src="{{ asset('/storage/app/public/images/users/'.auth('web')->user()->image) }}" alt="{{ auth('web')->user()->username }} image">
                                 </p>
+                            </figure>
+                            <div class="media-content">
+                                <div class="field">
+                                    <form method="post" action="">
+                                        <p class="control">
+                                            <input type="text" class="input" title="comment" id="comment" name="comment" placeholder="Write a comment" required>
+                                        </p>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                    </article>
-                </div>
-            </article>
+                        </article>
 
+                        @foreach($question->top_answer->comments as $comment)
+                            <article class="media">
+                                <figure class="media-left">
+                                    <p class="image is-48x48">
+                                        <img src="{{ asset('/storage/app/public/images/users/'.$comment->user->image) }}" alt="{{ $comment->user->first_name }} image">
+                                    </p>
+                                </figure>
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <a href="/user/{{ $comment->user->username }}/show">
+                                                <strong>
+                                                    {{ $comment->user->first_name." ".$comment->user->last_name }}
+                                                </strong>
+                                            </a>
+                                            <br>
+                                            {{ $comment->description }}
+                                            <br>
+                                            <small>{{ $comment->created_at->format('Y/m/d') }}</small> .
+                                            <small>
+                                                <a>
+                                                    {{ $comment->commentLikes()->where('user_id', auth('web')->id())->exists()?'Unlike':'Like' }}
+                                                </a>
+                                                {{ $comment->commentLikes()->count() }} </small> .
+                                            <small>
+                                                <a class="has-text-danger">Report</a>
+                                            </small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                </article>
+            @endif
         </div>
-    @endfor
+    @endforeach
 </div>
 {{--
 <div class="columns mt-1 mb-1 is-bordered">
