@@ -12,13 +12,9 @@
 <x-navbar />
 <div class="container">
     <div class="is-clearfix mt-4 mb-4">
-        <button class="button is-medium is-primary is-pulled-right">Ask New Question</button>
-    </div>
-    <div class="modal" id="question-form-model">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <form method="post" id="#question-form" action="/questions/create"></form>
-        </div>
+        <a href="/questions/create">
+            <button class="button is-medium is-primary is-pulled-right">Ask New Question</button>
+        </a>
     </div>
     <hr>
     <div class="is-clearfix">
@@ -41,7 +37,6 @@
         </div>
     </div>
     @foreach($questions as $question)
-        <script>{{ $question }}</script>
         <div class="section box mt-4 mb-4">
             <h6 class="title is-6">
                 <a href="/question/{{ $question->slug }}/show">
