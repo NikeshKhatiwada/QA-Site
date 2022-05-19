@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tags Page</title>
+    <title>Profile Page</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link href="https://css.gg/css" rel="stylesheet">
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -17,30 +17,22 @@
                 <div class="media">
                     <div class="media-left">
                         <figure class="image is-128x128">
-                            <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                            <img src="{{ asset('storage/images/users/'.$user->image) }}" alt="{{ $user->first_name }} image">
                         </figure>
                     </div>
                     <div class="media-content">
                         <p class="title is-4">
-                            Sujit Pradhan
+                            {{ $user->first_name." ".$user->last_name }}
                         </p>
-                        <script>
-                            if(document.getElementById('gender').innerText === "Male") {
-                                document.getElementById('gender-female').setAttribute("hidden", "hidden");
-                            }
-                            else if(document.getElementById('gender').innerText === "Female") {
-                                document.getElementById('gender-male').setAttribute("hidden", "hidden");
-                            }
-                        </script>
                         <p class="subtitle is-small" id="address">
                             <span class="icon">
                                 <i class="gg-user"></i>
                             </span>
-                            <span>SujitPradhan1234</span>
+                            <span>{{ $user->username }}</span>
                         </p>
                     </div>
                     <div class="buttons">
-                        <a href="">
+                        <a href="/profile/edit">
                             <button class="button is-medium is-primary" type="button" hidden>
                                 Edit
                             </button>
@@ -49,17 +41,16 @@
 
                 </div>
                 <p class="is-text is-small" id="gender">
-                        <span class="icon">
-                            <i class="gg-gender-male"></i>
-                            <i class="gg-gender-female"></i>
-                        </span>
-                    <span>Male</span>
+                    <span class="icon">
+                        <i class="{{ $user->gender===0?'gg-gender-male':'gg-gender-female' }}"></i>
+                    </span>
+                    <span>{{ $user->gender===0?'Male':'Female' }}</span>
                 </p>
                 <p class="is-text is-small" id="address">
                         <span class="icon">
                             <i class="gg-home"></i>
                         </span>
-                    <span>Birtamod-5, Buspark, Jhapa, Nepal</span>
+                    <span>{{ $user->address.", ".$user->district.", ".$user->country }}</span>
                 </p>
             </div>
         </div>
@@ -71,31 +62,31 @@
                         <div class="level-item has-text-centered">
                             <div>
                                 <p class="heading">Score</p>
-                                <p class="title">2016</p>
+                                <p class="title">{{ $user->score }}</p>
                             </div>
                         </div>
                         <div class="level-item has-text-centered">
                             <div>
                                 <p class="heading">Questions</p>
-                                <p class="title">20</p>
+                                <p class="title">{{ $user->questions->count() }}</p>
                             </div>
                         </div>
                         <div class="level-item has-text-centered">
                             <div>
                                 <p class="heading">Answers</p>
-                                <p class="title">30</p>
+                                <p class="title">{{ $user->answers->count() }}</p>
                             </div>
                         </div>
                         <div class="level-item has-text-centered">
                             <div>
                                 <p class="heading">Following</p>
-                                <p class="title">123</p>
+                                <p class="title">{{ $user->followingUsers()->count() }}</p>
                             </div>
                         </div>
                         <div class="level-item has-text-centered">
                             <div>
                                 <p class="heading">Followers</p>
-                                <p class="title">24</p>
+                                <p class="title">{{ $user->followerUsers()->count() }}</p>
                             </div>
                         </div>
                     </nav>
@@ -106,9 +97,9 @@
         <div class="card mt-2">
             <div class="card-content">
                 <div class="content">
-                    <div class="title is-5">Description</div>
+                    <div class="title is-5">About</div>
                     <div class="is-text">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, delectus impedit incidunt inventore magnam porro qui quod recusandae unde voluptate? Animi at doloribus esse, exercitationem mollitia nobis nostrum numquam similique? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam autem consequuntur distinctio doloremque error iste magnam minus, nihil obcaecati odio placeat sed, veritatis? Assumenda nemo officia quae quasi quibusdam voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aut nihil quis voluptates! Accusamus doloribus enim excepturi exercitationem illo ipsam itaque maxime, minus neque porro repudiandae soluta tempora vel vero.</p>
+                        <p>{{ $user->about }}</p>
                     </div>
                 </div>
             </div>
