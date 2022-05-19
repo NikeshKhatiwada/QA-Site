@@ -17,15 +17,13 @@
                 <div class="media">
                     <div class="media-left">
                         <figure class="image is-128x128">
-                            <img src="{{ asset('/storage/app/public/images/users/'.$user->image) }}" alt="{{ $user->first_name }} image">
+                            <img src="{{ asset('storage/app/public/images/users/'.$user->image) }}" alt="{{ $user->first_name }} image">
                         </figure>
                     </div>
                     <div class="media-content">
                         <p class="title is-4">
                             {{ $user->first_name." ".$user->last_name }}
                         </p>
-                        <script>
-                        </script>
                         <p class="subtitle is-small" id="address">
                             <span class="icon">
                                 <i class="gg-user"></i>
@@ -57,9 +55,9 @@
 
                 </div>
                 <p class="is-text is-small" id="gender">
-                        <span class="icon">
-                            <i class="{{ $user->gender===0?'gg-gender-male':'gg-gender-female' }}"></i>
-                        </span>
+                    <span class="icon">
+                        <i class="{{ $user->gender===0?'gg-gender-male':'gg-gender-female' }}"></i>
+                    </span>
                     <span>{{ $user->gender===0?'Male':'Female' }}</span>
                 </p>
                 <p class="is-text is-small" id="address">
