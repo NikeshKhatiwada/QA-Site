@@ -40,7 +40,7 @@ class UserProfileController extends Controller
             'district' => ['required'],
             'country' => ['required'],
             'timezone' => ['required'],
-            'email' => ['required']
+            'email' => ['required', Rule::unique('users', 'username')->ignore($user->id)]
         ]);
         $attributes['first_name'] = $attributes['first-name'];
         $attributes['last_name'] = $attributes['last-name'];
