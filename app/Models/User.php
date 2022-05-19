@@ -21,6 +21,7 @@ class User extends Authenticatable
         'username',
         'first_name',
         'last_name',
+        'gender',
         'image',
         'about',
         'address',
@@ -71,11 +72,11 @@ class User extends Authenticatable
     }
 
     public function followingUsers() {
-        return $this->belongsToMany(User::class, 'users_follow_users', 'follower_id', 'following_id');
+        return $this->belongsToMany(User::class, 'users_follow_users', 'follower_id', 'following_id')->withTimestamps();
     }
 
     public function followerUsers() {
-        return $this->belongsToMany(User::class, 'users_follow_users', 'following_id', 'follower_id');
+        return $this->belongsToMany(User::class, 'users_follow_users', 'following_id', 'follower_id')->withTimestamps();
     }
 
     public function followingTags() {
