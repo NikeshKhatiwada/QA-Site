@@ -77,7 +77,7 @@ class TagController extends Controller
         return view('tags.edit');
     }
 
-    public function follow(Tag $tag) {
+    public function follow() {
         $tag_slug = request()->validate([
             'tag_slug' => ['required', 'exists:tags,slug']
         ]);
@@ -87,7 +87,7 @@ class TagController extends Controller
         $tag->tagFollowers()->attach([$attributes]);
         return back()->with('success', 'Tag followed!');
     }
-    public function unfollow(Tag $tag) {
+    public function unfollow() {
         $tag_slug = request()->validate([
             'tag_slug' => ['required', 'exists:tags,slug']
         ]);
