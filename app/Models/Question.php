@@ -33,11 +33,11 @@ class Question extends Model
     }
 
     public function questionFollowers() {
-        return $this->belongsToMany(User::class, 'users_follow_questions', 'question_id', 'user_id');
+        return $this->belongsToMany(User::class, 'users_follow_questions', 'question_id', 'user_id')->withTimestamps();
     }
 
     public function questionVotes() {
-        return $this->belongsToMany(User::class, 'users_vote_questions', 'question_id', 'user_id');
+        return $this->belongsToMany(User::class, 'users_vote_questions', 'question_id', 'user_id')->withTimestamps();
     }
 
     public function questionReports() {
