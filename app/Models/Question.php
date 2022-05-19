@@ -25,7 +25,7 @@ class Question extends Model
     }
 
     public function tags() {
-        return $this->belongsToMany(Tag::class, 'questions_tags', 'question_id', 'tag_id');
+        return $this->belongsToMany(Tag::class, 'questions_tags', 'question_id', 'tag_id')->withTimestamps();
     }
 
     public function answers() {
