@@ -19,13 +19,13 @@
         <div class="column is-half box mt-6 mb-6">
             <h3 class="title is-3">Edit Profile</h3>
 
-            <form method="post" action="">
+            <form method="post" enctype="multipart/form-data" action="/profile/">
                 @csrf
                 @method('PATCH')
                 <div class="field">
                     <label class="label" for="first-name">First Name</label>
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input" type="text" id="first-name" name="first-name" value="Suman" required>
+                        <input class="input" type="text" id="first-name" name="first-name" value="{{ $user->first_name }}" required>
                         <span class="icon is-small is-left">
                             <i class="gg-smile"></i>
                         </span>
@@ -41,7 +41,7 @@
                 <div class="field">
                     <label class="label" for="last-name">Last Name</label>
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input" type="text" id="last-name" name="last-name" value="Kafle" required>
+                        <input class="input" type="text" id="last-name" name="last-name" value="{{ $user->last_name }}" required>
                         <span class="icon is-small is-left">
                             <i class="gg-smile"></i>
                         </span>
@@ -61,14 +61,14 @@
                             <span class="icon is-small">
                                 <i class="gg-gender-male"></i>
                             </span>
-                            <input id="male" type="radio" name="gender" value="male" checked required>
+                            <input id="male" type="radio" name="gender" value="male" {{ $user->gender===0?'checked':'' }} required>
                             Male
                         </label>
                         <label class="radio">
                             <span class="icon is-small">
                                 <i class="gg-gender-female"></i>
                             </span>
-                            <input id="female" type="radio" name="gender" value="female" required>
+                            <input id="female" type="radio" name="gender" value="female" {{ $user->gender===1?'checked':'' }} required>
                             Female
                         </label>
                     </div>
@@ -80,7 +80,7 @@
                 <div class="field">
                     <label class="label" for="username">Username</label>
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input" type="text" id="username" name="username" value="SumanKafle" required>
+                        <input class="input" type="text" id="username" name="username" value="{{ $user->username }}" required>
                         <span class="icon is-small is-left">
                             <i class="gg-user"></i>
                         </span>
@@ -96,7 +96,7 @@
                 <div class="field">
                     <label class="label" for="about">About</label>
                     <div class="control">
-                        <textarea class="textarea" id="about" name="about">I am Suman.</textarea>
+                        <textarea class="textarea" id="about" name="about">{{ $user->about }}</textarea>
                     </div>
                     @error('about')
                     <p class="help is-danger">{{ $message }}</p>
@@ -106,7 +106,7 @@
                 <div class="field">
                     <label class="label" for="email">Email</label>
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input" type="email" id="email" name="email" value="sumankafle@email.org" required>
+                        <input class="input" type="email" id="email" name="email" value="{{ $user->email }}" required>
                         <span class="icon is-small is-left">
                             <i class="gg-inbox"></i>
                         </span>
@@ -123,16 +123,14 @@
                     <label class="label" for="image">Image</label>
                     <div class="file has-name">
                         <label class="file-label">
-                            <input class="file-input" type="file" id="image" name="image" placeholder="Enter an image" onchange="document.getElementById('image-name').innerText = document.getElementById('image').files[0].name;">
+                            <input class="file-input" type="file" id="image" name="image" placeholder="Enter an image"
+                                   onchange="document.getElementById('image-name').innerText = document.getElementById('image').files[0].name;">
                             <span class="file-cta">
                                 <span class="file-icon">
                                     <i class="gg-file-add"></i>
                                 </span>
                                 <span class="file-label">
                                     Choose a file…
-                                </span>
-                                <span class="icon is-small">
-                                    <i class="gg-check"></i>
                                 </span>
                             </span>
                             <span class="file-name" id="image-name">
@@ -147,7 +145,7 @@
                 <div class="field">
                     <label class="label" for="address">Address</label>
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input" type="text" id="address" name="address" value="Suryodaya" required>
+                        <input class="input" type="text" id="address" name="address" value="{{ $user->address }}" required>
                         <span class="icon is-small is-left">
                             <i class="gg-home"></i>
                         </span>
@@ -163,7 +161,7 @@
                 <div class="field">
                     <label class="label" for="district">District</label>
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input" type="text" id="district" name="district" value="Ilam" required>
+                        <input class="input" type="text" id="district" name="district" value="{{ $user->district }}" required>
                         <span class="icon is-small is-left">
                             <i class="gg-pin"></i>
                         </span>
@@ -179,7 +177,7 @@
                 <div class="field">
                     <label class="label" for="country">Country</label>
                     <div class="control has-icons-left has-icons-right">
-                        <input class="input" type="text" id="country" name="country" value="Nepal" required>
+                        <input class="input" type="text" id="country" name="country" value="{{ $user->country }}" required>
                         <span class="icon is-small is-left">
                             <i class="gg-globe-alt"></i>
                         </span>
@@ -203,7 +201,7 @@
                                     });
                                     let timezone_options = document.getElementById('timezone').childNodes;
                                     timezone_options.forEach(timezone_option => {
-                                        if(timezone_option.value === "Asia/Katmandu") {
+                                        if(timezone_option.value === "{{ $user->timezone }}") {
                                             timezone_option.setAttribute("selected", "selected")
                                         }
                                     })
@@ -224,7 +222,7 @@
 
                 <div class="field is-grouped">
                     <div class="control">
-                        <button type="submit" class="button is-primary" name="login">Submit</button>
+                        <button type="submit" class="button is-primary" name="save">Submit</button>
                     </div>
 
                     <div class="control">
@@ -237,7 +235,7 @@
                 </div>
             </form>
 
-            <form method="post" id="delete-profile" action="/profile/">
+            <form method="post" id="delete-profile" action="/profile">
                 @csrf
                 @method('DELETE')
             </form>
