@@ -44,7 +44,7 @@
                         <i class="gg-bell"></i>
                     </a>
 
-                    <a class="button is-ghost" href="/profile">
+                    <a class="button is-ghost" href="/profile/show">
                         <i class="gg-profile"></i>
                     </a>
 
