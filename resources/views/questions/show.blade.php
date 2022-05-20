@@ -164,6 +164,31 @@
             <h3 class="title is-4">Answers</h3>
         </div>
 
+        <div class="box mt-4 mb-4 {{ !is_null($question->answer)?'is-hidden':'' }}" id="answer-form">
+            <form method="post" action="{{ is_null($question->answer)?'/answers/'.$question->slug:'/answer/'.$question->slug }}">
+                @csrf
+                <input type="hidden" name="_method" value="{{ is_null($question->answer)?'POST':'PATCH' }}">
+                <div class="field">
+                    <label class="label" for="answer-description">
+                        {{ is_null($question->answer)?'Add Answer':'Edit Answer' }}
+                    </label>
+                    <div class="control">
+                        <textarea class="textarea" rows="10" id="answer-description" name="answer-description"
+                                  required>{{ !is_null($question->answer)?$question->answer->description:old('answer-description') }}</textarea>
+                    </div>
+                    @error('answer-description')
+                        <p class="help is-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-link">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         @foreach($question->answers as $answer)
             <div class="section box mt-4 mb-4">
                 <article class="media">
@@ -191,38 +216,60 @@
                         </div>
                         <div class="level is-mobile">
                             <div class="level-left">
-                                <div class="level-item">
-                                    <form method="post" action="/answer/upvote">
-                                        @csrf
-                                        <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $answer->user->username }}" required>
-                                        <input type="text" class="input is-hidden" title="question_slug" id="question_slug" name="question_slug" value="{{ $question->slug }}" required>
-                                        <button class="button is-light {{ $answer->vote===1?'is-info':'' }}" type="submit">
-                                            <i class="gg-chevron-up"></i>
-                                            {{ $answer->upvotes }}
+                                @if(!($answer->user->id === auth('web')->id()))
+                                    <div class="level-item">
+                                        <form method="post" action="/answer/upvote">
+                                            @csrf
+                                            <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $answer->user->username }}" required>
+                                            <input type="text" class="input is-hidden" title="question_slug" id="question_slug" name="question_slug" value="{{ $question->slug }}" required>
+                                            <button class="button is-light {{ $answer->vote===1?'is-info':'' }}" type="submit">
+                                                <i class="gg-chevron-up"></i>
+                                                {{ $answer->upvotes }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="level-item">
+                                        <form method="post" action="/answer/downvote">
+                                            @csrf
+                                            <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $answer->user->username }}" required>
+                                            <input type="text" class="input is-hidden" title="question_slug" id="question_slug" name="question_slug" value="{{ $question->slug }}" required>
+                                            <button class="button is-light {{ $answer->vote===-1?'is-info':'' }}" type="submit">
+                                                <i class="gg-chevron-down"></i>
+                                                {{ $answer->downvotes }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                @elseif($answer->user->id === auth('web')->id())
+                                    <div class="level-item">
+                                        <button class="button is-primary" type="button" onclick="document.getElementById('answer-form').classList.remove('is-hidden')">
+                                            <i class="gg-pen"></i>
+                                            Edit
                                         </button>
-                                    </form>
-                                </div>
-                                <div class="level-item">
-                                    <form method="post" action="/answer/downvote">
-                                        @csrf
-                                        <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $answer->user->username }}" required>
-                                        <input type="text" class="input is-hidden" title="question_slug" id="question_slug" name="question_slug" value="{{ $question->slug }}" required>
-                                        <button class="button is-light {{ $answer->vote===-1?'is-info':'' }}" type="submit">
-                                            <i class="gg-chevron-down"></i>
-                                            {{ $answer->downvotes }}
-                                        </button>
-                                    </form>
-                                </div>
+                                    </div>
+                                @endif
                             </div>
                             <div class="level-right">
-                                <div class="level-item">
-                                    <a href="">
-                                        <button class="button is-danger" type="button">
-                                            <i class="gg-flag"></i>
-                                            Report
-                                        </button>
-                                    </a>
-                                </div>
+                                @if(!($answer->user->id === auth('web')->id()))
+                                    <div class="level-item">
+                                        <a href="">
+                                            <button class="button is-danger" type="button">
+                                                <i class="gg-flag"></i>
+                                                Report
+                                            </button>
+                                        </a>
+                                    </div>
+                                @elseif($answer->user->id === auth('web')->id())
+                                    <div class="level-item">
+                                        <form method="post" id="delete-answer" action="/answer/{{ $question->slug }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="button is-danger">
+                                                <i class="gg-close-o"></i>
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -233,13 +280,16 @@
                                 </p>
                             </figure>
                             <div class="media-content">
-                                <div class="field">
-                                    <form method="post" action="">
+                                <form method="post" action="/comments/create">
+                                    @csrf
+                                    <div class="field">
                                         <p class="control">
+                                            <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $answer->user->username }}" required>
+                                            <input type="text" class="input is-hidden" title="question_slug" id="question_slug" name="question_slug" value="{{ $question->slug }}" required>
                                             <input type="text" class="input" title="comment" id="comment" name="comment" placeholder="Write a comment" required>
                                         </p>
-                                    </form>
-                                </div>
+                                    </div>
+                                </form>
                             </div>
                         </article>
 
