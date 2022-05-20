@@ -14,10 +14,6 @@ class UserProfileController extends Controller
         ]);
     }
 
-    public function create() {
-        return view('users.profiles.create');
-    }
-
     public function edit() {
         return view('users.profiles.edit', [
             'user' => auth('web')->user()
@@ -40,7 +36,7 @@ class UserProfileController extends Controller
             'district' => ['required'],
             'country' => ['required'],
             'timezone' => ['required'],
-            'email' => ['required', Rule::unique('users', 'username')->ignore($user->id)]
+            'email' => ['required', Rule::unique('users', 'email')->ignore($user->id)]
         ]);
         $attributes['first_name'] = $attributes['first-name'];
         $attributes['last_name'] = $attributes['last-name'];
