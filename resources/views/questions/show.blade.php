@@ -260,7 +260,7 @@
                                     </div>
                                 @elseif($answer->user->id === auth('web')->id())
                                     <div class="level-item">
-                                        <form method="post" id="delete-answer" action="/answer/{{ $question->slug }}">
+                                        <form method="post" action="/answer/{{ $question->slug }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="button is-danger">
@@ -273,6 +273,38 @@
                             </div>
                         </div>
 
+                        <article class="media is-hidden" id="comment-edit">
+                            <figure class="media-left">
+                                <p class="image is-48x48">
+                                    <img src="{{ asset('storage/images/users/'.auth('web')->user()->image) }}" alt="{{ auth('web')->user()->username }} image">
+                                </p>
+                            </figure>
+                            <div class="media-content">
+                                <form method="post" id="comment-edit-form">
+                                    @csrf
+                                    @method('PATCH')
+                                    <div class="field">
+                                        <p class="control">
+                                            <input type="text" class="input" title="comment-edit-description" id="comment-edit-description" name="comment-edit-description" placeholder="Edit your comment" required>
+                                        </p>
+                                    </div>
+                                    <div class="field is-grouped">
+                                        <div class="control">
+                                            <button type="submit" class="button is-link is-small">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <form method="post" id="like" action="/comment/like" hidden>
+                                    @csrf
+                                    <input type="text" class="input" title="comment_id" id="like_comment_id" name="comment_id" required>
+                                </form>
+                                <form method="post" id="delete-comment" hidden>
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            </div>
+                        </article>
+
                         <article class="media">
                             <figure class="media-left">
                                 <p class="image is-48x48">
@@ -280,14 +312,20 @@
                                 </p>
                             </figure>
                             <div class="media-content">
-                                <form method="post" action="/comments/create">
+                                <form method="post" action="/comments">
                                     @csrf
                                     <div class="field">
                                         <p class="control">
                                             <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $answer->user->username }}" required>
                                             <input type="text" class="input is-hidden" title="question_slug" id="question_slug" name="question_slug" value="{{ $question->slug }}" required>
-                                            <input type="text" class="input" title="comment" id="comment" name="comment" placeholder="Write a comment" required>
+                                            <input type="text" class="input" title="comment-description" id="comment-description" name="comment-description" placeholder="Write a comment" required>
+
                                         </p>
+                                    </div>
+                                    <div class="field is-grouped">
+                                        <div class="control">
+                                            <button type="submit" class="button is-link is-small">Submit</button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -313,12 +351,26 @@
                                             <br>
                                             <small>{{ $comment->created_at->format('Y/m/d') }}</small> .
                                             <small>
-                                                <a>
-                                                    {{ $comment->commentLikes()->where('user_id', auth('web')->id())->exists()?'Unlike':'Like' }}
-                                                </a>
-                                                {{ $comment->commentLikes()->count() }} </small> .
+                                                @if(!($comment->user->id === auth('web')->id()))
+                                                    <a onclick="document.getElementById('like_comment_id').value='{{ $comment->id }}';document.getElementById('like').submit()">
+                                                        {{ $comment->commentLikes()->where('user_id', auth('web')->id())->exists()?'Unlike':'Like' }}
+                                                    </a>
+                                                @endif
+                                                {{ $comment->commentLikes()->count() }} likes
+                                            </small> .
+                                            @if($comment->user->id === auth('web')->id())
+                                                <small>
+                                                    <a class="has-text-primary" onclick="document.getElementById('comment-edit-form').action='/comment/{{ $comment->id }}';document.getElementById('comment-edit-description').value='{{ $comment->description }}';document.getElementById('comment-edit').classList.remove('is-hidden')">
+                                                        Edit
+                                                    </a>
+                                                </small> .
+                                            @endif
                                             <small>
-                                                <a class="has-text-danger">Report</a>
+                                                @if(!($comment->user->id === auth('web')->id()))
+                                                    <a class="has-text-danger">Report</a>
+                                                @elseif($comment->user->id === auth('web')->id())
+                                                    <a class="has-text-danger" onclick="document.getElementById('delete-comment').action='/comment/{{ $comment->id }}';document.getElementById('delete-comment').submit()">Delete</a>
+                                                @endif
                                             </small>
                                         </p>
                                     </div>
