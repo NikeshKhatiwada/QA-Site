@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\TagController;
@@ -36,16 +38,26 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/questions', 'store');
         Route::get('/question/{question:slug}/edit', 'edit');
         Route::patch('/question/{question:slug}', 'update');
+        Route::delete('/question/{question:slug}', 'destroy');
         Route::post('/question/follow', 'follow');
         Route::post('/question/unfollow', 'unfollow');
         Route::post('/question/upvote', 'upvote');
         Route::post('/question/downvote', 'downvote');
-        Route::delete('/question/{question:slug}', 'destroy');
     });
 
     Route::controller(AnswerController::class)->group(function () {
+        Route::post('/answers/{question:slug}', 'store');
+        Route::patch('/answer/{question:slug}', 'update');
+        Route::delete('/answer/{question:slug}', 'destroy');
         Route::post('/answer/upvote', 'upvote');
         Route::post('/answer/downvote', 'downvote');
+    });
+
+    Route::controller(CommentController::class)->group(function () {
+        Route::post('/comments', 'store');
+        Route::patch('/comment/{comment:id}', 'update');
+        Route::delete('/comment/{comment:id}', 'destroy');
+        Route::post('/comment/like', 'like');
     });
 
     Route::controller(TagController::class)->group(function () {
@@ -74,5 +86,7 @@ Route::middleware('auth:web')->group(function () {
 });
 
 Route::get('/login', [UserSessionsController::class, 'create'])->name('login')->middleware('guest');
-Route::post('sessions', [UserSessionsController::class, 'store'])->middleware('guest');
-Route::get('/register', [UserProfileController::class, 'create'])->name('register')->middleware('guest');
+Route::post('/sessions', [UserSessionsController::class, 'store'])->middleware('guest');
+Route::post('/logout', [UserSessionsController::class, 'destroy'])->middleware('auth:web');
+Route::get('/register', [RegisterController::class, 'create'])->name('register')->middleware('guest');
+Route::post('/register', [RegisterController::class, 'store'])->name('register')->middleware('guest');
