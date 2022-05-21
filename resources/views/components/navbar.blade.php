@@ -49,6 +49,7 @@
                     </a>
 
                     <form method="post" action="/logout">
+                        @csrf
                         <button type="submit" class="button is-ghost">
                             <i class="gg-log-out"></i>
                         </button>
