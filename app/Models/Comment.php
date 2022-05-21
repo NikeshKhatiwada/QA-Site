@@ -29,7 +29,7 @@ class Comment extends Model
     }
 
     public function commentLikes() {
-        return $this->belongsToMany(User::class, 'users_like_comments', 'comment_id', 'user_id');
+        return $this->belongsToMany(User::class, 'users_like_comments', 'comment_id', 'user_id')->withTimestamps();
     }
 
     public function answerReports() {
