@@ -57,6 +57,7 @@ class QuestionController extends Controller
             $answer->downvotes = $answer->answerVotes()->where('vote', -1)->count();
             $answer->vote = $answer->answerVotes()->where('user_id', auth('web')->id())->value('vote');
         });
+        $question->answer = $question->answers->where('user_id', auth('web')->id())->first();
         return view('questions.show', [
             'question' => $question,
         ]);

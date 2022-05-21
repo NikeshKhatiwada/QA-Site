@@ -9,6 +9,28 @@ use Illuminate\Http\Request;
 
 class AnswerController extends Controller
 {
+    public function store(Question $question) {
+        $attributes = $this->getAttributes($question);
+        if(Answer::where('user_id', auth('web')->id())->where('question_id', $question->id)->exists()) {
+            return back()->withInput()->withErrors(['answer-description' => 'You have already posted answer to this question.']);
+        }
+        Answer::create($attributes);
+        return back()->with('success', 'Answer inserted!');
+    }
+
+    public function update(Question $question) {
+        $attributes = $this->getAttributes($question);
+        $answer = Answer::where('user_id', auth('web')->id())->where('question_id', $question->id)->first();
+        $answer->update($attributes);
+        return back()->with('success', 'Answer updated!');
+    }
+
+    public function destroy(Question $question) {
+        $answer = Answer::where('user_id', auth('web')->id())->where('question_id', $question->id)->first();
+        $answer->delete();
+        return back()->with('success', 'Answer deleted!');
+    }
+
     public function upvote() {
         request()->validate([
             'user_username' => ['required', 'exists:users,username'],
@@ -53,5 +75,20 @@ class AnswerController extends Controller
             $answer->answerVotes()->attach([$attributes]);
         }
         return back()->with('success', 'Answer downvoted!');
+    }
+
+    /**
+     * @param Question $question
+     * @return array
+     */
+    private function getAttributes(Question $question): array
+    {
+        $attributes = request()->validate([
+            'answer-description' => ['required']
+        ]);
+        $attributes['question_id'] = $question->id;
+        $attributes['user_id'] = auth('web')->id();
+        $attributes['description'] = request('answer-description');
+        return $attributes;
     }
 }
