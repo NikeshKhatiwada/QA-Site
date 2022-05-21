@@ -32,6 +32,10 @@ class Question extends Model
         return $this->hasMany(Answer::class);
     }
 
+    public function questionViews() {
+        return $this->belongsToMany(User::class, 'users_view_questions', 'question_id', 'user_id')->withTimestamps();
+    }
+
     public function questionFollowers() {
         return $this->belongsToMany(User::class, 'users_follow_questions', 'question_id', 'user_id')->withTimestamps();
     }
