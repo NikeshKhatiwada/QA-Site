@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use App\Models\TagCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class TagController extends Controller
 {
@@ -70,7 +73,26 @@ class TagController extends Controller
     }
 
     public function create() {
-        return view('tags.create');
+        return view('tags.create', [
+            'tag_categories' => TagCategory::all()
+        ]);
+    }
+
+    public function store() {
+        $user_id = auth()->user()->id;
+        $attributes = request()->validate([
+            'title' => ['required', Rule::unique('questions', 'title')],
+            'image' => ['required', 'image'],
+            'category' => ['required', Rule::exists('tag_categories', 'name')],
+            //'related_tags' => ['required', Rule::exists('tags', 'slug')],
+            'description' => ['required']
+        ]);
+        $attributes['tag_category_id'] = TagCategory::where('name', request('category'))->first()->id;
+        $attributes['slug'] = Str::slug(request('title'));
+        $attributes['image'] = request()->file('image')->hashName();
+        request()->file('image')->store('images/tags');
+        $tag = Tag::create($attributes);
+        return redirect('/tag/'.$tag->slug."/show")->with('success', 'Tag inserted!');
     }
 
     public function edit() {

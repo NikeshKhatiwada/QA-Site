@@ -17,7 +17,9 @@
         <hr>
         <div class="is-clearfix">
             <div class="field is-pulled-left">
-                <button class="button is-medium is-primary is-pulled-right js-modal-trigger">Add Tag</button>
+                <a href="/tags/create">
+                    <button class="button is-medium is-primary is-pulled-right">Add Tag</button>
+                </a>
             </div>
             <div class="field has-addons is-pulled-right">
                 <form id="show-tags" method="get" action="" hidden>
@@ -56,14 +58,14 @@
                                 <div class="media">
                                     <div class="media-left">
                                         <figure class="image is-128x128">
-                                            <img src="{{ asset('/storage/app/public/images/tags/'.$tag->image) }}" alt="{{ $tag->title }} Image">
+                                            <img src="{{ asset('/storage/images/tags/'.$tag->image) }}" alt="{{ $tag->title }} Image">
                                         </figure>
                                     </div>
                                     <div class="media-content">
                                         <p class="title is-4">
                                             <a href="/tag/{{ $tag->slug }}/show">{{ $tag->title }}</a>
                                         </p>
-                                        <p class="subtitle is-6">Language</p>
+                                        <p class="subtitle is-6">{{ $tag->tagCategory->name }}</p>
                                     </div>
                                 </div>
 

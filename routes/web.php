@@ -21,14 +21,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/question/create', function () {
-    return view('questions.create');
-}); //->middleware('user');
-
-Route::get('/question/edit', function () {
-    return view('questions.edit');
-}); //->middleware('user');
-
 Route::middleware('auth:web')->group(function () {
     Route::controller(QuestionController::class)->group(function () {
         Route::get('/', 'index');
@@ -63,8 +55,9 @@ Route::middleware('auth:web')->group(function () {
     Route::controller(TagController::class)->group(function () {
         Route::get('/tags', 'index');
         Route::get('/tag/{tag:slug}/show', 'show');
-        Route::get('/tag/create', 'create');
-        Route::get('/tag/edit', 'edit');
+        Route::get('/tags/create', 'create');
+        Route::post('/tags', 'store');
+        Route::get('/tags/edit', 'edit');
         Route::post('/tag/follow', 'follow');
         Route::post('/tag/unfollow', 'unfollow');
     });

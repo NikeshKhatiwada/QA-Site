@@ -21,7 +21,7 @@
 <div class="container">
     <h3 class="title is-3">Add Tag</h3>
 
-    <form method="post" action="">
+    <form method="post" enctype="multipart/form-data" action="/tags">
         @csrf
         <div class="field">
             <label class="label" for="title">Title</label>
@@ -30,21 +30,6 @@
             </div>
             @error('title')
             <p class="help is-danger">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div class="field">
-            <label class="label" for="related-tags">Related Tags</label>
-            <div class="is-multiple">
-                <select class="input js-tags-multiple" id="related-tags" name="related-tags" size="6" multiple="multiple" required>
-                    <option value="asp.net">ASP.NET</option>
-                    <option value="crystal">Crystal</option>
-                    <option value="html">HTML</option>
-                    <option value="java">Java</option>
-                </select>
-            </div>
-            @error('related-tags')
-            <p class="help in-danger">{{ $message }}</p>
             @enderror
         </div>
 
@@ -68,9 +53,40 @@
                 </div>
             </div>
             @error('image')
+            <p class="help is-danger">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="field">
+            <label class="label" for="category">Category</label>
+            <div class="select">
+                <select id="category" name="category" required>
+                    @foreach($tag_categories as $category)
+                        <option value="{{ $category->name }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @error('category')
             <p class="help in-danger">{{ $message }}</p>
             @enderror
         </div>
+
+        {{--
+        <div class="field">
+            <label class="label" for="related-tags">Related Tags</label>
+            <div class="is-multiple">
+                <select class="input js-tags-multiple" id="related-tags" name="related-tags" size="6" multiple="multiple" required>
+                    <option value="asp.net">ASP.NET</option>
+                    <option value="crystal">Crystal</option>
+                    <option value="html">HTML</option>
+                    <option value="java">Java</option>
+                </select>
+            </div>
+            @error('related-tags')
+            <p class="help in-danger">{{ $message }}</p>
+            @enderror
+        </div>
+        --}}
 
         <div class="field">
             <label class="label" for="description">Description</label>
