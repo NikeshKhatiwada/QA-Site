@@ -18,11 +18,11 @@ class Tag extends Model
     ];
 
     protected $with = [
-        'tag_category'
+        'tagCategory'
     ];
 
     public function tagCategory() {
-        return $this->belongsTo(Tag::class);
+        return $this->belongsTo(TagCategory::class);
     }
 
     public function questions() {
