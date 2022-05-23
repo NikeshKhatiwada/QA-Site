@@ -109,6 +109,17 @@ class QuestionController extends Controller
         ]);
     }
 
+    public function search() {
+        $questions = collect();
+        if(request()->has('search_query')) {
+            $search = request('search_query');
+            $questions = Question::where('title', 'like', '%'. $search. '%')->orWhere('description', 'like', '%'. $search. '%')->get();
+        }
+        return view('questions.search', [
+            'questions' => $questions
+        ]);
+    }
+
     public function show(Question $question) {
         $question->upvotes = $question->questionVotes()->where('vote', 1)->count();
         $question->downvotes = $question->questionVotes()->where('vote', -1)->count();
