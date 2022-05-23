@@ -18,7 +18,7 @@
                     <div class="media">
                         <div class="media-left">
                             <figure class="image is-128x128">
-                                <img src="{{ asset('/storage/app/public/images/tags/'.$tag->image) }}" alt="{{ $tag->title }} image">
+                                <img src="{{ asset('/storage/images/tags/'.$tag->image) }}" alt="{{ $tag->title }} image">
                             </figure>
                         </div>
                         <div class="media-content">
