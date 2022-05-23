@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tag_category_id')->constrained('tag_categories')->cascadeOnDelete();
             $table->string('slug')->unique();
             $table->string('title')->unique();
             $table->text('description');
