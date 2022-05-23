@@ -46,6 +46,7 @@ class RegisterController extends Controller
         }
         $user = User::create($attributes);
         $this->storeTagsFollow($user);
+        (new UserScoreController)->update($user->id, 20);
         return redirect('/')->with('success', 'Profile created!');
     }
 
