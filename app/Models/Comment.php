@@ -32,7 +32,7 @@ class Comment extends Model
         return $this->belongsToMany(User::class, 'users_like_comments', 'comment_id', 'user_id')->withTimestamps();
     }
 
-    public function answerReports() {
+    public function commentReports() {
         return $this->hasMany(Report::class, 'report_about_id')->where('report_about_category', '=', 3);
     }
 }
