@@ -11,14 +11,22 @@ class Report extends Model
 
     protected $fillable = [
         'user_id',
+        'report_category_id',
         'report_about_id',
         'report_about_category',
-        'report_category',
         'report_description',
+    ];
+
+    protected $with = [
+        'reportCategory'
     ];
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function reportCategory() {
+        return $this->belongsTo(ReportCategory::class);
     }
 
     public function reportedUsers() {
@@ -35,5 +43,9 @@ class Report extends Model
 
     public function reportedComments() {
         return $this->belongsTo(Comment::class, 'report_about_id')->where('report_about_category', '=', 3);
+    }
+
+    public function reportedTags() {
+        return $this->belongsTo(Comment::class, 'report_about_id')->where('report_about_category', '=', 10);
     }
 }
