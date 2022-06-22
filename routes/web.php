@@ -4,6 +4,7 @@ use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\TagController;
@@ -25,6 +26,7 @@ Route::middleware('auth:web')->group(function () {
     Route::controller(QuestionController::class)->group(function () {
         Route::get('/', 'index');
         Route::get('/home', 'index');
+        Route::get('/search', 'search');
         Route::get('/question/{question:slug}/show', 'show');
         Route::get('/questions/create', 'create');
         Route::post('/questions', 'store');
@@ -75,6 +77,9 @@ Route::middleware('auth:web')->group(function () {
         Route::patch('/profile', 'update');
         Route::patch('/profile/password', 'updatePassword');
         Route::delete('/profile', 'delete');
+    });
+    Route::controller(ReportController::class)->group(function() {
+        Route::get('/reports/create', 'create');
     });
 });
 
