@@ -111,12 +111,21 @@ class QuestionController extends Controller
 
     public function search() {
         $questions = collect();
+        $found_questions = collect();
         if(request()->has('search_query')) {
             $search = request('search_query');
-            $questions = Question::where('title', 'like', '%'. $search. '%')->orWhere('description', 'like', '%'. $search. '%')->get();
+            $questions = Question::all()->sortByDesc('created_at');
+            foreach($questions as $question) {
+                if(str_contains($question->title, $search))
+                    $found_questions->add($question);
+            }
+            foreach($questions as $question) {
+                if(str_contains($question->description, $search))
+                    $found_questions->add($question);
+            }
         }
         return view('questions.search', [
-            'questions' => $questions
+            'questions' => $found_questions
         ]);
     }
 
