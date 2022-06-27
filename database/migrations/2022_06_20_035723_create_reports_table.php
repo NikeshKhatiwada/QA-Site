@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('report_category_id')->constrained('report_categories')->cascadeOnDelete();
             $table->unsignedInteger('report_about_id');
             $table->unsignedTinyInteger('report_about_category');
+            $table->char('report_status')->default('U');
             $table->text('report_description');
             $table->timestamps();
         });
