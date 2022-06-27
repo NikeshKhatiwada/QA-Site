@@ -130,6 +130,47 @@ class QuestionController extends Controller
     }
 
     public function show(Question $question) {
+        $questions = Question::all()->except($question->id);
+        $tags = Tag::all()->sortBy('id');
+        $question->points = [];
+        foreach ($tags as $tag) {
+            if ($question->tags->contains('id', $tag->id)) {
+                $question->points = array_merge($question->points, [1]);
+            } else {
+                $question->points = array_merge($question->points, [0]);
+            }
+        }
+        $questions->map(function ($q) use ($tags) {
+            $q->points = [];
+            foreach ($tags as $tag) {
+                if($q->tags->contains('id', $tag->id)) {
+                    $q->points = array_merge($q->points, [1]);
+                }
+                else {
+                    $q->points = array_merge($q->points, [0]);
+                }
+            }
+        });
+        $related_questions = collect();
+        $questions->map(function ($q) use ($question) {
+            $q->distance = 0;
+            $pointsDifference = [];
+            $i = 0;
+            while ($i < count($q->points)) {
+                $pointsDifference[$i] = pow(($question->points[$i] - $q->points[$i]), 2);
+                $i++;
+            }
+            $q->distance = (int)(sqrt(array_sum($pointsDifference)));
+        });
+        $questions->sortBy(function ($q) {
+            return $q->distance;
+        });
+        $questions->map(function ($q) use ($related_questions) {
+            if ($related_questions->count() > 10) {
+                return;
+            }
+            $related_questions->push($q);
+        });
         $question->upvotes = $question->questionVotes()->where('vote', 1)->count();
         $question->downvotes = $question->questionVotes()->where('vote', -1)->count();
         $question->vote = $question->questionVotes()->where('user_id', auth('web')->id())->value('vote');
@@ -151,7 +192,8 @@ class QuestionController extends Controller
         }
         $question->questionViews()->attach([$attributes]);
         return view('questions.show', [
-            'question' => $question
+            'question' => $question,
+            'related_questions' => $related_questions
         ]);
     }
 
