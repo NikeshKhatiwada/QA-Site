@@ -60,7 +60,7 @@
                                         </strong>
                                     </a>
                                 </div>
-                                <div>Answered {{ $question->top_answer->user->created_at->format('Y/m/d') }}</div>
+                                <div>Answered {{ $question->top_answer->created_at->format('Y/m/d') }}</div>
                             </div>
                         </div>
 
