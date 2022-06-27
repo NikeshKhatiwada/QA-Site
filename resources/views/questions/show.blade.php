@@ -384,23 +384,25 @@
         @endforeach
     </div>
 
-    <div class="column mr-3 is-fullheight is-4-tablet-only is-3">
-        <div class="content is-medium" style="overflow: hidden">
+    <div class="column ml-1 mr-1 is-fullheight is-4-tablet-only is-3">
+        <div class="content is-medium" style="overflow: auto">
             <h5 class="title is-5">Related Questions</h5>
             <ul class="ml-0" style="list-style: none">
-                @for($i = 0; $i <24; $i ++)
+                @foreach($related_questions as $related_question)
                     <li class="mt-2 mb-2">
-                        <a href="/">
-                            <span>How to connect to NodeJs with C#?</span>
+                        <a href="/question/{{ $related_question->slug }}/show">
+                            <span>{{ $related_question->title }}</span>
                         </a>
                     </li>
-                @endfor
+                @endforeach
             </ul>
+            {{--
             <span>
-                <a href="">
+                <a href="/">
                     <button type="button" class="button is-light is-large">All Questions</button>
                 </a>
             </span>
+            --}}
         </div>
     </div>
 </div>
