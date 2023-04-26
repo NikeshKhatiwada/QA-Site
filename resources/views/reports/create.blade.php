@@ -18,7 +18,7 @@
             <form method="post" action="/reports">
                 @csrf
                 <input type="text" class="input is-hidden" title="reported-item-category" id="reported-item-category" name="reported-item-id" value="{{ $reportAbout->category }}">
-                <input type="number" class="input is-hidden" title="reported-item-id" id="reported-item-id" name="reported-item-id" value="{{ $reportAbout->name }}">
+                <input type="number" class="input is-hidden" title="reported-item-id" id="reported-item-id" name="reported-item-id" value="{{ $reportAbout->title }}">
                 <div class="field">
                     <label class="label" for="title">{{ $reportAbout->category }} {{ $reportAbout->category==="User"?"Name":"Title/Description" }}</label>
                     <div class="control">

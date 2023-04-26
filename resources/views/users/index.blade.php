@@ -46,7 +46,7 @@
                                 <div class="media">
                                     <div class="media-left">
                                         <figure class="image is-128x128">
-                                            <img src="{{ asset('/storage/app/public/images/users/'.$user->image) }}" alt="{{ $user->first_name }} image">
+                                            <img src="{{ asset('/storage/images/users/'.$user->image) }}" alt="{{ $user->first_name }} image">
                                         </figure>
                                     </div>
                                     <div class="media-content">
@@ -66,7 +66,10 @@
                                 </div>
 
                                 <div class="content">
+                                    {{--
                                     <div class="is-text is-bold">Score: {{ $user->score }}</div>
+                                    --}}
+                                    <div class="is-text is-bold">Followers: {{ $user->followerUsers->count() }}</div>
                                 </div>
                             </div>
                         </div>

@@ -17,11 +17,13 @@ class CheckSuspended
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth('web')->check() && auth('web')->user()->suspended_until->gt(Carbon::now()->timestamp)) {
-            auth('web')->logout();
-            request()->session()->invalidate();
-            request()->session()->regenerateToken();
-            return redirect()->route('/login')->with('error', 'Your Account is in suspension.');
+        if(auth('web')->check() && !is_null(auth('web')->user()->suspended_until)) {
+            if(strtotime(auth('web')->user()->suspended_until) > (Carbon::now()->timestamp)) {
+                auth('web')->logout();
+                request()->session()->invalidate();
+                request()->session()->regenerateToken();
+                return redirect('/login')->with('error', 'Your Account is in suspension.');
+            }
         }
         return $next($request);
     }

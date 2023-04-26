@@ -28,7 +28,7 @@
                             <span class="icon">
                                 <i class="gg-user"></i>
                             </span>
-                            <span>{{ $user->username }}</span>
+                            <span><a href="/user/{{ $user->username }}/show">{{ $user->username }}</a></span>
                         </p>
                     </div>
                     <div class="buttons">
@@ -52,6 +52,12 @@
                         </span>
                     <span>{{ $user->address.", ".$user->district.", ".$user->country }}</span>
                 </p>
+                <p class="is-text is-small" id="email">
+                        <span class="icon">
+                            <i class="gg-mail"></i>
+                        </span>
+                    <span>{{ $user->email }}</span>
+                </p>
             </div>
         </div>
 
@@ -59,12 +65,14 @@
             <div class="card-content">
                 <div class="content">
                     <nav class="level">
+                        {{--
                         <div class="level-item has-text-centered">
                             <div>
                                 <p class="heading">Score</p>
                                 <p class="title">{{ $user->score }}</p>
                             </div>
                         </div>
+                        --}}
                         <div class="level-item has-text-centered">
                             <div>
                                 <p class="heading">Questions</p>

@@ -19,7 +19,7 @@ class ModeratorUserController extends Controller
             if(request('user_type') === 'top') {
                 return view('moderators.users.index', [
                     'users' => $users->sortByDesc(function ($user) {
-                        return $user->score;
+                        return $user->followerUsers->count();
                     })
                 ]);
             }

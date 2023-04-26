@@ -2,6 +2,14 @@
 
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ModeratorAnswerController;
+use App\Http\Controllers\ModeratorCommentController;
+use App\Http\Controllers\ModeratorController;
+use App\Http\Controllers\ModeratorQuestionController;
+use App\Http\Controllers\ModeratorReportController;
+use App\Http\Controllers\ModeratorSessionsController;
+use App\Http\Controllers\ModeratorTagController;
+use App\Http\Controllers\ModeratorUserController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReportController;
@@ -59,7 +67,8 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/tag/{tag:slug}/show', 'show');
         Route::get('/tags/create', 'create');
         Route::post('/tags', 'store');
-        Route::get('/tags/edit', 'edit');
+        Route::get('/tags/{tag:slug}/edit', 'edit');
+        Route::patch('/tag/{tag:slug}', 'update');
         Route::post('/tag/follow', 'follow');
         Route::post('/tag/unfollow', 'unfollow');
     });
@@ -70,6 +79,7 @@ Route::middleware('auth:web')->group(function () {
         Route::post('/user/follow', 'follow');
         Route::post('/user/unfollow', 'unfollow');
     });
+
     Route::controller(UserProfileController::class)->group(function() {
         Route::get('/profile/show', 'show');
         Route::get('/profile/edit', 'edit');
@@ -78,13 +88,51 @@ Route::middleware('auth:web')->group(function () {
         Route::patch('/profile/password', 'updatePassword');
         Route::delete('/profile', 'delete');
     });
+
     Route::controller(ReportController::class)->group(function() {
         Route::get('/reports/create', 'create');
     });
 });
 
+Route::middleware('auth:web_moderator')->group( function () {
+    Route::controller(ModeratorController::class)->group(function () {
+        Route::get('/moderator/dashboard', 'index');
+        Route::get('/moderator/home', 'index');
+    });
+
+    Route::controller(ModeratorUserController::class)->group(function () {
+        Route::get('/moderator/users', 'index');
+        Route::post('/moderator/user/suspend', 'suspend');
+        Route::post('/moderator/user/unsuspend', 'unsuspend');
+    });
+
+    Route::controller(ModeratorQuestionController::class)->group(function () {
+        Route::get('/moderator/questions', 'index');
+    });
+
+    Route::controller(ModeratorAnswerController::class)->group(function () {
+        Route::get('/moderator/answers', 'index');
+    });
+
+    Route::controller(ModeratorCommentController::class)->group(function () {
+        Route::get('/moderator/comments', 'index');
+    });
+
+    Route::controller(ModeratorTagController::class)->group(function () {
+        Route::get('/moderator/tags', 'index');
+    });
+
+    Route::controller(ModeratorReportController::class)->group(function () {
+        Route::get('/moderator/reports', 'index');
+    });
+});
+
 Route::get('/login', [UserSessionsController::class, 'create'])->name('login')->middleware('guest');
+Route::get('/moderator', [ModeratorSessionsController::class, 'create'])->name('m_login')->middleware('guest');
 Route::post('/sessions', [UserSessionsController::class, 'store'])->middleware('guest');
+Route::post('/moderator/sessions', [ModeratorSessionsController::class, 'store'])->middleware('guest');
 Route::post('/logout', [UserSessionsController::class, 'destroy'])->middleware('auth:web');
+Route::post('/moderator/logout', [ModeratorSessionsController::class, 'destroy'])->middleware('auth:web_moderator');
 Route::get('/register', [RegisterController::class, 'create'])->name('register')->middleware('guest');
 Route::post('/register', [RegisterController::class, 'store'])->name('register')->middleware('guest');
+

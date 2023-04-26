@@ -26,6 +26,6 @@ class ModeratorSessionsController extends Controller
 
     public function destroy() {
         auth('web_moderator')->logout();
-        return redirect('/moderator/dashboard')->with('success', 'Goodbye!');
+        return redirect('/moderator')->with('success', 'Goodbye!');
     }
 }

@@ -14,7 +14,16 @@ class TagController extends Controller
         if(request()->has('tag_type'))
         {
             $tags = Tag::all();
-            if(request('tag_type') === 'new') {
+            if(request('tag_type') === 'following') {
+                $user = auth('web')->user();
+                $tags = $user->followingTags;
+                return view('tags.index', [
+                    'tags' => $tags->sortByDesc(function ($tag) {
+                        return $tag->created_at;
+                    })
+                ]);
+            }
+            elseif(request('tag_type') === 'new') {
                 foreach ($tags as $tag) {
                     $tag->questions = $tag->questions->sortByDesc('created_at');
                 }
@@ -79,7 +88,6 @@ class TagController extends Controller
     }
 
     public function store() {
-        $user_id = auth()->user()->id;
         $attributes = request()->validate([
             'title' => ['required', Rule::unique('questions', 'title')],
             'image' => ['required', 'image'],
@@ -95,8 +103,22 @@ class TagController extends Controller
         return redirect('/tag/'.$tag->slug."/show")->with('success', 'Tag inserted!');
     }
 
-    public function edit() {
-        return view('tags.edit');
+    public function edit(Tag $tag) {
+        return view('tags.edit', [
+            'tag' => $tag
+        ]);
+    }
+
+    public function update(Tag $tag) {
+        $attributes = request()->validate([
+            'title' => ['required', Rule::unique('questions', 'title')],
+            'image' => ['image'],
+            'description' => ['required']
+        ]);
+        $attributes['image'] = request()->file('image')->hashName();
+        request()->file('image')->store('images/tags');
+        $tag->update($attributes);
+        return redirect('/tag/'.$tag->slug."/show")->with('success', 'Tag updated!');
     }
 
     public function follow() {

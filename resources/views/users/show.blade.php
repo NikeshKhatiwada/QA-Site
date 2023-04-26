@@ -17,7 +17,7 @@
                 <div class="media">
                     <div class="media-left">
                         <figure class="image is-128x128">
-                            <img src="{{ asset('storage/app/public/images/users/'.$user->image) }}" alt="{{ $user->first_name }} image">
+                            <img src="{{ asset('storage/images/users/'.$user->image) }}" alt="{{ $user->first_name }} image">
                         </figure>
                     </div>
                     <div class="media-content">
@@ -32,25 +32,27 @@
                         </p>
                     </div>
                     <div class="buttons">
-                        @if($user->followerUsers->where('id', auth('web')->id())->isEmpty())
-                            <form id="follow" method="post" action="/user/follow">
-                                @csrf
-                                <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $user->username }}" required>
-                                <button class="button is-medium is-info" type="submit">Follow</button>
-                            </form>
-                        @elseif(!$user->followerUsers->where('id', auth('web')->id())->isEmpty())
-                            <form id="unfollow" method="post" action="/user/unfollow">
-                                @csrf
-                                <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $user->username }}" required>
-                                <button class="button is-medium is-warning" type="submit">Unfollow</button>
-                            </form>
+                        @if(!($user->id === auth('web')->id()))
+                            @if($user->followerUsers->where('id', auth('web')->id())->isEmpty())
+                                <form id="follow" method="post" action="/user/follow">
+                                    @csrf
+                                    <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $user->username }}" required>
+                                    <button class="button is-medium is-info" type="submit">Follow</button>
+                                </form>
+                            @elseif(!$user->followerUsers->where('id', auth('web')->id())->isEmpty())
+                                <form id="unfollow" method="post" action="/user/unfollow">
+                                    @csrf
+                                    <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $user->username }}" required>
+                                    <button class="button is-medium is-warning" type="submit">Unfollow</button>
+                                </form>
+                            @endif
+                            <a href="/reports/create?itemCategory=user&itemId={{ $user->id }}">
+                                <button class="button is-medium is-danger" type="button">
+                                    <i class="gg-flag"></i>
+                                    Report
+                                </button>
+                            </a>
                         @endif
-                        <a href="">
-                            <button class="button is-medium is-danger" type="button">
-                                <i class="gg-flag"></i>
-                                Report
-                            </button>
-                        </a>
                     </div>
 
                 </div>
@@ -73,12 +75,14 @@
             <div class="card-content">
                 <div class="content">
                     <nav class="level">
+                        {{--
                         <div class="level-item has-text-centered">
                             <div>
                                 <p class="heading">Score</p>
                                 <p class="title">{{ $user->score }}</p>
                             </div>
                         </div>
+                        --}}
                         <div class="level-item has-text-centered">
                             <div>
                                 <p class="heading">Questions</p>
@@ -153,7 +157,7 @@
                             <div class="columns">
                                 <div class="column is-2-tablet is-1-widescreen has-fixed-size">
                                     <figure class="image is-64x64">
-                                        <img src="{{ asset('/storage/app/public/images/users/'.$question->answer->user->image) }}" alt="{{ $question->answer->user->first_name }} image">
+                                        <img src="{{ asset('/storage/images/users/'.$question->answer->user->image) }}" alt="{{ $question->answer->user->first_name }} image">
                                     </figure>
                                 </div>
                                 <div class="column">
@@ -171,41 +175,47 @@
                             <div class="content">
                                 {{ $question->answer->description }}
                             </div>
-                            <div class="level is-mobile">
-                                <div class="level-left">
-                                    <form id="upvote" method="post" action="/upvote" hidden>
-                                        <input type="text" class="input" title="questionId" id="questionId" name="questionId" value="Question" required>
-                                        <input type="text" class="input" title="answerId" id="answerId" name="answerId" value="Answer" required>
-                                    </form>
-                                    <form id="downvote" method="post" action="/downvote" hidden>
-                                        <input type="text" class="input" title="questionId" id="questionId" name="questionId" value="Question" required>
-                                        <input type="text" class="input" title="answerId" id="answerId" name="answerId" value="Answer" required>
-                                    </form>
-                                    <div class="level-item">
-                                        <button class="button is-light {{ $question->answer->vote===1?'is-info':'' }}" type="submit" onclick="document.getElementById('upvote').submit()">
-                                            <i class="gg-chevron-up"></i>
-                                            {{ $question->answer->upvotes }}
-                                        </button>
-                                    </div>
-                                    <div class="level-item">
-                                        <button class="button is-light {{ $question->answer->vote===-1?'is-info':'' }}" type="submit" onclick="document.getElementById('downvote').submit()">
-                                            <i class="gg-chevron-down"></i>
-                                            {{ $question->answer->downvotes }}
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="level-right">
-                                    <div class="level-item">
-                                        <a href="">
-                                            <button class="button is-danger" type="button">
-                                                <i class="gg-flag"></i>
-                                                Report
-                                            </button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
 
+                            @if(!($question->answer->user->id === auth('web')->id()))
+                                <div class="level is-mobile">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <form id="upvote" method="post" action="/answer/upvote">
+                                                @csrf
+                                                <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $question->answer->user->username }}" required>
+                                                <input type="text" class="input is-hidden" title="question_slug" id="question_slug" name="question_slug" value="{{ $question->slug }}" required>
+                                                <button class="button is-light {{ $question->answer->vote===1?'is-info':'' }}" type="submit">
+                                                    <i class="gg-chevron-up"></i>
+                                                    {{ $question->answer->upvotes }}
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div class="level-item">
+                                            <form id="downvote" method="post" action="/answer/downvote">
+                                                @csrf
+                                                <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $question->answer->user->username }}" required>
+                                                <input type="text" class="input is-hidden" title="question_slug" id="question_slug" name="question_slug" value="{{ $question->slug }}" required>
+                                                <button class="button is-light {{ $question->answer->vote===-1?'is-info':'' }}" type="submit">
+                                                    <i class="gg-chevron-down"></i>
+                                                    {{ $question->answer->downvotes }}
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <a href="/reports/create?itemCategory=answer&itemId={{ $question->answer->id }}">
+                                                <button class="button is-danger" type="button">
+                                                    <i class="gg-flag"></i>
+                                                    Report
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{--
                             <article class="media">
                                 <figure class="media-left">
                                     <p class="image is-48x48">
@@ -257,6 +267,7 @@
                                     </div>
                                 </article>
                             @endforeach
+                            --}}
                         </div>
                     </article>
                 @endif

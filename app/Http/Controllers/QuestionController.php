@@ -6,6 +6,7 @@ use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -27,6 +28,23 @@ class QuestionController extends Controller
         });
         if(request()->has('question_type'))
         {
+            if(request('question_type') === 'following') {
+                $user = auth('web')->user();
+                $questions = $user->followingQuestions;
+                $questions->map(function ($question) {
+                    $question->top_answer = $question->answers->sortByDesc(function ($answer) {
+                        return $answer->answerVotes()->sum('vote');
+                    })->first();
+                    if($question->top_answer) {
+                        $question->top_answer->upvotes = $question->top_answer->answerVotes()->where('vote', 1)->count();
+                        $question->top_answer->downvotes = $question->top_answer->answerVotes()->where('vote', -1)->count();
+                        $question->top_answer->vote = $question->top_answer->answerVotes()->where('user_id', auth('web')->id())->value('vote');
+                    }
+                });
+                return view('index', [
+                    'questions' => $questions->sortByDesc('created_at')
+                ]);
+            }
             if(request('question_type') === 'new') {
                 return view('index', [
                     'questions' => $questions->sortByDesc('created_at')
@@ -46,64 +64,7 @@ class QuestionController extends Controller
             return ($question->questionViews()->where('user_id', $user_id)->exists());
         });
         $questions = $questions->diffAssoc($viewed_questions);
-        $viewed_questions->map(function ($viewed_question) {
-            $viewed_question->points = [];
-        });
-        $questions->map(function ($question) {
-            $question->points = [];
-            $question->distance = 0;
-        });
-        $viewed_questions->map(function ($viewed_question) use ($tags) {
-            foreach ($tags as $tag) {
-                if ($viewed_question->tags->contains('id', $tag->id)) {
-                    $viewed_question->points = array_merge($viewed_question->points, [1]);
-                } else {
-                    $viewed_question->points = array_merge($viewed_question->points, [0]);
-                }
-            }
-        });
-        $questions->map(function ($question) use ($tags) {
-            foreach ($tags as $tag) {
-                if($question->tags->contains('id', $tag->id)) {
-                    $question->points = array_merge($question->points, [1]);
-                }
-                else {
-                    $question->points = array_merge($question->points, [0]);
-                }
-            }
-        });
-        $suggested_questions = collect();
-        $viewed_questions_count = $viewed_questions->count();
-        $viewed_questions->map(function ($viewed_question) use ($viewed_questions_count, $suggested_questions, $questions) {
-            $questions->map(function ($question) use ($viewed_question) {
-                $question->distance = 0;
-                $pointsDifference = [];
-                $i = 0;
-                while ($i < count($viewed_question->points) - 10) {
-                    $pointsDifference[$i] = pow(($viewed_question->points[$i] - $question->points[$i]), 2);
-                    $i++;
-                }
-                $question->distance = (int)(sqrt(array_sum($pointsDifference)));
-            });
-            $questions->sortBy(function ($question) {
-                return $question->distance;
-            });
-            $questions = $questions->take($viewed_questions_count);
-            $questions->map(function ($question) use ($suggested_questions) {
-                $suggested_questions->push($question);
-            });
-        });
-        $suggested_questions = $suggested_questions->unique();
-        $suggested_questions->map(function ($question) {
-            $question->top_answer = $question->answers->sortByDesc(function ($answer) {
-                return $answer->answerVotes()->sum('vote');
-            })->first();
-            if($question->top_answer) {
-                $question->top_answer->upvotes = $question->top_answer->answerVotes()->where('vote', 1)->count();
-                $question->top_answer->downvotes = $question->top_answer->answerVotes()->where('vote', -1)->count();
-                $question->top_answer->vote = $question->top_answer->answerVotes()->where('user_id', auth('web')->id())->value('vote');
-            }
-        });
+        $suggested_questions = $this->getSuggestedQuestions($viewed_questions, $questions, $tags);
         return view('index', [
             'questions' => $suggested_questions
         ]);
@@ -151,26 +112,7 @@ class QuestionController extends Controller
                 }
             }
         });
-        $related_questions = collect();
-        $questions->map(function ($q) use ($question) {
-            $q->distance = 0;
-            $pointsDifference = [];
-            $i = 0;
-            while ($i < count($q->points)) {
-                $pointsDifference[$i] = pow(($question->points[$i] - $q->points[$i]), 2);
-                $i++;
-            }
-            $q->distance = (int)(sqrt(array_sum($pointsDifference)));
-        });
-        $questions->sortBy(function ($q) {
-            return $q->distance;
-        });
-        $questions->map(function ($q) use ($related_questions) {
-            if ($related_questions->count() > 10) {
-                return;
-            }
-            $related_questions->push($q);
-        });
+        $related_questions = $this->getRelatedQuestions($questions, $question);
         $question->upvotes = $question->questionVotes()->where('vote', 1)->count();
         $question->downvotes = $question->questionVotes()->where('vote', -1)->count();
         $question->vote = $question->questionVotes()->where('user_id', auth('web')->id())->value('vote');
@@ -332,5 +274,104 @@ class QuestionController extends Controller
         $attributes['question_id'] = $question->id;
         $attributes['user_id'] = $user_id;
         $question->questionFollowers()->attach([$attributes]);
+    }
+
+    /**
+     * @param Collection $viewed_questions
+     * @param Collection $questions
+     * @param Collection $tags
+     * @return \Illuminate\Support\Collection
+     */
+    private function getSuggestedQuestions(Collection $viewed_questions, Collection $questions, Collection $tags): \Illuminate\Support\Collection
+    {
+        $viewed_questions->map(function ($viewed_question) {
+            $viewed_question->points = [];
+        });
+        $questions->map(function ($question) {
+            $question->points = [];
+            $question->distance = 0;
+        });
+        $viewed_questions->map(function ($viewed_question) use ($tags) {
+            foreach ($tags as $tag) {
+                if ($viewed_question->tags->contains('id', $tag->id)) {
+                    $viewed_question->points = array_merge($viewed_question->points, [1]);
+                } else {
+                    $viewed_question->points = array_merge($viewed_question->points, [0]);
+                }
+            }
+        });
+        $questions->map(function ($question) use ($tags) {
+            foreach ($tags as $tag) {
+                if ($question->tags->contains('id', $tag->id)) {
+                    $question->points = array_merge($question->points, [1]);
+                } else {
+                    $question->points = array_merge($question->points, [0]);
+                }
+            }
+        });
+        $suggested_questions = collect();
+        $viewed_questions_count = $viewed_questions->count();
+        $viewed_questions->map(function ($viewed_question) use ($viewed_questions_count, $suggested_questions, $questions) {
+            $questions->map(function ($question) use ($viewed_question) {
+                $question->distance = 0;
+                $pointsDifference = [];
+                $i = 0;
+                while ($i < count($viewed_question->points) - 10) {
+                    $pointsDifference[$i] = pow(($viewed_question->points[$i] - $question->points[$i]), 2);
+                    $i++;
+                }
+                $question->distance = (int)(sqrt(array_sum($pointsDifference)));
+            });
+            $questions = $questions->sortBy(function ($question) {
+                return $question->distance;
+            });
+            $questions = $questions->take($viewed_questions_count * 2);
+            $questions->map(function ($question) use ($suggested_questions) {
+                $suggested_questions->push($question);
+            });
+        });
+        $suggested_questions = $suggested_questions->unique();
+        $suggested_questions->map(function ($question) {
+            $question->top_answer = $question->answers->sortByDesc(function ($answer) {
+                return $answer->answerVotes()->sum('vote');
+            })->first();
+            if ($question->top_answer) {
+                $question->top_answer->upvotes = $question->top_answer->answerVotes()->where('vote', 1)->count();
+                $question->top_answer->downvotes = $question->top_answer->answerVotes()->where('vote', -1)->count();
+                $question->top_answer->vote = $question->top_answer->answerVotes()->where('user_id', auth('web')->id())->value('vote');
+            }
+        });
+        return $suggested_questions;
+    }
+
+    /**
+     * @param Collection $questions
+     * @param Question $question
+     * @return \Illuminate\Support\Collection
+     */
+    private function getRelatedQuestions(Collection $questions, Question $question): \Illuminate\Support\Collection
+    {
+        $related_questions = collect();
+        $questions->map(function ($q) use ($question) {
+            $q->distance = 0;
+            $pointsDifference = [];
+            $i = 0;
+            while ($i < count($q->points)) {
+                $pointsDifference[$i] = pow(($question->points[$i] - $q->points[$i]), 2);
+                $i++;
+            }
+            $q->distance = (int)(sqrt(array_sum($pointsDifference)));
+        });
+        $questions = $questions->sortBy(function ($q) {
+            return $q->distance;
+        });
+        $questions = $questions->unique();
+        $questions->map(function ($q) use ($related_questions) {
+            if ($related_questions->count() > 10) {
+                return;
+            }
+            $related_questions->push($q);
+        });
+        return $related_questions;
     }
 }

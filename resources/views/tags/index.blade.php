@@ -23,13 +23,14 @@
             </div>
             <div class="field has-addons is-pulled-right">
                 <form id="show-tags" method="get" action="" hidden>
-                    <input type="radio" title="suggested" id="suggested" name="tag_type" value="suggested" required>
+                    <input type="radio" title="following" id="following" name="tag_type" value="following" required>
                     <input type="radio" title="top" id="top" name="tag_type" value="top" required>
                     <input type="radio" title="new" id="new" name="tag_type" value="new" required>
                 </form>
                 <p class="control">
-                    <button class="button is-medium">
-                        <span>Suggested</span>
+                    <button class="button is-medium" type="submit"
+                            onclick="document.getElementById('following').setAttribute('checked', 'checked');document.getElementById('show-tags').submit();">
+                        <span>Following</span>
                     </button>
                 </p>
                 <p class="control">

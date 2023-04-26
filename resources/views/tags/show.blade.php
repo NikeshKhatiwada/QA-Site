@@ -25,7 +25,7 @@
                             <p class="title is-4">
                                 {{ $tag->title }}
                             </p>
-                            <p class="subtitle is-6">Language</p>
+                            <p class="subtitle is-6">{{ $tag->tagCategory->name }}</p>
                             <p class="is-text">Total Questions: {{ $tag->questions->count() }}</p>
                             <div class="is-text">
                                 @if(!$tag->questions->isEmpty())
@@ -43,19 +43,32 @@
                         </div>
                     </div>
 
-                    @if($tag->tagFollowers->where('id', auth('web')->id())->isEmpty())
-                        <form id="follow" method="post" action="/tag/follow">
-                            @csrf
-                            <input type="text" class="input is-hidden" title="tag_slug" id="tag_slug" name="tag_slug" value="{{ $tag->slug }}" required>
-                            <button class="button is-medium is-info" type="submit">Follow</button>
-                        </form>
-                    @elseif(!$tag->tagFollowers->where('id', auth('web')->id())->isEmpty())
-                        <form id="unfollow" method="post" action="/tag/unfollow">
-                            @csrf
-                            <input type="text" class="input is-hidden" title="tag_slug" id="tag_slug" name="tag_slug" value="{{ $tag->slug }}" required>
-                            <button class="button is-medium is-warning" type="submit">Unfollow</button>
-                        </form>
-                    @endif
+                    <div class="buttons">
+                        @if($tag->tagFollowers->where('id', auth('web')->id())->isEmpty())
+                            <form id="follow" method="post" action="/tag/follow">
+                                @csrf
+                                <input type="text" class="input is-hidden" title="tag_slug" id="tag_slug" name="tag_slug" value="{{ $tag->slug }}" required>
+                                <button class="button is-medium is-info" type="submit">Follow</button>
+                            </form>
+                        @elseif(!$tag->tagFollowers->where('id', auth('web')->id())->isEmpty())
+                            <form id="unfollow" method="post" action="/tag/unfollow">
+                                @csrf
+                                <input type="text" class="input is-hidden" title="tag_slug" id="tag_slug" name="tag_slug" value="{{ $tag->slug }}" required>
+                                <button class="button is-medium is-warning" type="submit">Unfollow</button>
+                            </form>
+                        @endif
+                        <a href="/tags/{{ $tag->slug }}/edit">
+                            <button class="button is-medium is-primary" type="button">
+                                Edit
+                            </button>
+                        </a>
+                        <a href="/reports/create?itemCategory=tag&itemId={{ $tag->id }}">
+                            <button class="button is-medium is-danger" type="button">
+                                <i class="gg-flag"></i>
+                                Report
+                            </button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,7 +104,7 @@
                             <div class="columns">
                                 <div class="column is-2-tablet is-1-widescreen has-fixed-size">
                                     <figure class="image is-64x64">
-                                        <img src="{{ asset('/storage/app/public/images/users/'.$question->top_answer->user->image) }}" alt="{{ $question->top_answer->user->first_name }} image">
+                                        <img src="{{ asset('/storage/images/users/'.$question->top_answer->user->image) }}" alt="{{ $question->top_answer->user->first_name }} image">
                                     </figure>
                                 </div>
                                 <div class="column">
@@ -109,41 +122,47 @@
                             <div class="content">
                                 {{ $question->top_answer->description }}
                             </div>
-                            <div class="level is-mobile">
-                                <div class="level-left">
-                                    <form id="upvote" method="post" action="/upvote" hidden>
-                                        <input type="text" class="input" title="questionId" id="questionId" name="questionId" value="Question" required>
-                                        <input type="text" class="input" title="answerId" id="answerId" name="answerId" value="Answer" required>
-                                    </form>
-                                    <form id="downvote" method="post" action="/downvote" hidden>
-                                        <input type="text" class="input" title="questionId" id="questionId" name="questionId" value="Question" required>
-                                        <input type="text" class="input" title="answerId" id="answerId" name="answerId" value="Answer" required>
-                                    </form>
-                                    <div class="level-item">
-                                        <button class="button is-light {{ $question->top_answer->vote===1?'is-info':'' }}" type="submit" onclick="document.getElementById('upvote').submit()">
-                                            <i class="gg-chevron-up"></i>
-                                            {{ $question->top_answer->upvotes }}
-                                        </button>
-                                    </div>
-                                    <div class="level-item">
-                                        <button class="button is-light {{ $question->top_answer->vote===-1?'is-info':'' }}" type="submit" onclick="document.getElementById('downvote').submit()">
-                                            <i class="gg-chevron-down"></i>
-                                            {{ $question->top_answer->downvotes }}
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="level-right">
-                                    <div class="level-item">
-                                        <a href="">
-                                            <button class="button is-danger" type="button">
-                                                <i class="gg-flag"></i>
-                                                Report
-                                            </button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
 
+                            @if(!($question->top_answer->user->id === auth('web')->id()))
+                                <div class="level is-mobile">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <form id="upvote" method="post" action="/answer/upvote">
+                                                @csrf
+                                                <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $question->top_answer->user->username }}" required>
+                                                <input type="text" class="input is-hidden" title="question_slug" id="question_slug" name="question_slug" value="{{ $question->slug }}" required>
+                                                <button class="button is-light {{ $question->top_answer->vote===1?'is-info':'' }}" type="submit">
+                                                    <i class="gg-chevron-up"></i>
+                                                    {{ $question->top_answer->upvotes }}
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div class="level-item">
+                                            <form id="downvote" method="post" action="/answer/downvote">
+                                                @csrf
+                                                <input type="text" class="input is-hidden" title="user_username" id="user_username" name="user_username" value="{{ $question->top_answer->user->username }}" required>
+                                                <input type="text" class="input is-hidden" title="question_slug" id="question_slug" name="question_slug" value="{{ $question->slug }}" required>
+                                                <button class="button is-light {{ $question->top_answer->vote===-1?'is-info':'' }}" type="submit">
+                                                    <i class="gg-chevron-down"></i>
+                                                    {{ $question->top_answer->downvotes }}
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <a href="/reports/create?itemCategory=answer&itemId={{ $question->top_answer->id }}">
+                                                <button class="button is-danger" type="button">
+                                                    <i class="gg-flag"></i>
+                                                    Report
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{--
                             <article class="media">
                                 <figure class="media-left">
                                     <p class="image is-48x48">
@@ -193,6 +212,7 @@
                                     </div>
                                 </article>
                             @endforeach
+                            --}}
                         </div>
                     </article>
                 @endif
@@ -200,6 +220,7 @@
         @endforeach
     </div>
 
+    {{--
     <div class="column mr-3 is-fullheight is-3-tablet-only is-2">
         <div class="content is-medium" style="overflow: hidden">
             <h5 class="title is-5">Related Tags</h5>
@@ -219,6 +240,7 @@
             </span>
         </div>
     </div>
+    --}}
 </div>
 </body>
 </html>

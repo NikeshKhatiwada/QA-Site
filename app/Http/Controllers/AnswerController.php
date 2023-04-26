@@ -15,6 +15,11 @@ class AnswerController extends Controller
             return back()->withInput()->withErrors(['answer-description' => 'You have already posted answer to this question.']);
         }
         Answer::create($attributes);
+        $attributes = null;
+        $attributes['user_id'] = auth('web')->id();
+        if(!($question->questionFollowers()->where('user_id', $attributes['user_id'])->exists())) {
+            $question->questionFollowers()->attach([$attributes]);
+        }
         return back()->with('success', 'Answer inserted!');
     }
 
@@ -28,6 +33,8 @@ class AnswerController extends Controller
     public function destroy(Question $question) {
         $answer = Answer::where('user_id', auth('web')->id())->where('question_id', $question->id)->first();
         $answer->delete();
+        $attributes = null;
+        $attributes['user_id'] = auth('web')->id();
         return back()->with('success', 'Answer deleted!');
     }
 

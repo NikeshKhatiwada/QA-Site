@@ -10,6 +10,13 @@ class UserController extends Controller
     public function index() {
         if(request()->has('user_type'))
         {
+            if(request('user_type') === 'top') {
+                return view('users.index', [
+                    'users' => User::all()->sortByDesc(function ($user) {
+                        return $user->followerUsers->count();
+                    })
+                ]);
+            }
             if(request('user_type') === 'new') {
                 return view('users.index', [
                     'users' => User::all()->sortByDesc('created_at')

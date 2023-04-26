@@ -21,18 +21,20 @@
 <div class="container">
     <h3 class="title is-3">Edit Tag</h3>
 
-    <form method="post" action="">
+    <form method="post" enctype="multipart/form-data" action="/tag/{{ $tag->slug }}">
+        @method('PATCH')
         @csrf
         <div class="field">
             <label class="label" for="title">Title</label>
             <div class="control">
-                <input class="input" type="text" id="title" name="title" placeholder="Tag Title" value="JavaScript" required>
+                <input class="input" type="text" id="title" name="title" placeholder="Tag Title" value="{{ $tag->title }}" required>
             </div>
             @error('title')
             <p class="help is-danger">{{ $message }}</p>
             @enderror
         </div>
 
+        {{--
         <div class="field">
             <label class="label" for="related-tags">Related Tags</label>
             <div class="is-multiple">
@@ -47,13 +49,15 @@
             <p class="help in-danger">{{ $message }}</p>
             @enderror
         </div>
+        --}}
 
         <div class="field">
             <label class="label" for="image">Image</label>
             <div class="control">
                 <div class="file has-name">
                     <label class="file-label">
-                        <input class="file-input" type="file" id="image" name="image" placeholder="Enter an image" onchange="document.getElementById('image-name').innerText = document.getElementById('image').files[0].name;">
+                        <input class="file-input" type="file" id="image" name="image" placeholder="Enter an image"
+                               onchange="document.getElementById('image-name').innerText = document.getElementById('image').files[0].name;">
                         <span class="file-cta">
                             <span class="file-icon">
                                 <i class="gg-file-add"></i>
@@ -75,7 +79,7 @@
         <div class="field">
             <label class="label" for="description">Description</label>
             <div class="control">
-                <textarea class="textarea" rows="10" id="description" name="description" placeholder="Tag Description" required>JavaScript, often abbreviated JS, is a programming language that is one of the core technologies of the World Wide Web, alongside HTML and CSS. Over 97% of websites use JavaScript on the client side for web page behavior, often incorporating third-party libraries.</textarea>
+                <textarea class="textarea" rows="10" id="description" name="description" placeholder="Tag Description" required>{{ $tag->description }}</textarea>
             </div>
             @error('description')
             <p class="help is-danger">{{ $message }}</p>

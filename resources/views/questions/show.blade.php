@@ -104,7 +104,7 @@
                         @if(!($question->user->id === auth('web')->id()))
                             <div class="level-right">
                                 <div class="level-item">
-                                    <a href="">
+                                    <a href="/reports/create?itemCategory=question&itemId={{ $question->id }}">
                                         <button class="button is-danger" type="button">
                                             <i class="gg-flag"></i>
                                             Report
@@ -251,7 +251,7 @@
                             <div class="level-right">
                                 @if(!($answer->user->id === auth('web')->id()))
                                     <div class="level-item">
-                                        <a href="">
+                                        <a href="/reports/create?itemCategory=answer&itemId={{ $answer->id }}">
                                             <button class="button is-danger" type="button">
                                                 <i class="gg-flag"></i>
                                                 Report
@@ -367,7 +367,7 @@
                                             @endif
                                             <small>
                                                 @if(!($comment->user->id === auth('web')->id()))
-                                                    <a class="has-text-danger">Report</a>
+                                                    <a class="has-text-danger" href="/reports/create?itemCategory=comment&itemId={{ $comment->id }}">Report</a>
                                                 @elseif($comment->user->id === auth('web')->id())
                                                     <a class="has-text-danger" onclick="document.getElementById('delete-comment').action='/comment/{{ $comment->id }}';document.getElementById('delete-comment').submit()">Delete</a>
                                                 @endif

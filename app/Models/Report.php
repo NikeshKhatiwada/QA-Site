@@ -29,23 +29,23 @@ class Report extends Model
         return $this->belongsTo(ReportCategory::class);
     }
 
-    public function reportedUsers() {
-        return $this->belongsTo(User::class, 'report_about_id')->where('report_about_category', '=', 0);
+    public function reportedUser() {
+        return $this->belongsTo(User::class, 'report_about_id');
     }
 
-    public function reportedQuestions() {
-        return $this->belongsTo(Question::class, 'report_about_id')->where('report_about_category', '=', 1);
+    public function reportedQuestion() {
+        return $this->belongsTo(Question::class, 'report_about_id');
     }
 
-    public function reportedAnswers() {
-        return $this->belongsTo(Answer::class, 'report_about_id')->where('report_about_category', '=', 2);
+    public function reportedAnswer() {
+        return $this->belongsTo(Answer::class, 'report_about_id');
     }
 
     public function reportedComments() {
-        return $this->belongsTo(Comment::class, 'report_about_id')->where('report_about_category', '=', 3);
+        return $this->belongsTo(Comment::class, 'report_about_id');
     }
 
     public function reportedTags() {
-        return $this->belongsTo(Comment::class, 'report_about_id')->where('report_about_category', '=', 10);
+        return $this->belongsTo(Tag::class, 'report_about_id');
     }
 }

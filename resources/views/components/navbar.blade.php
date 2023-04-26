@@ -1,7 +1,7 @@
 <nav class="navbar is-light" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item" href="/">
-            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+            <img src="{{ asset('storage/images/QA_Logo.png') }}" alt="QA Site image" width="112" height="28">
         </a>
 
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -17,6 +17,7 @@
             <a class="navbar-item" href="/tags">Tags</a>
             <a class="navbar-item" href="/users">Users</a>
 
+            {{--
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
                     More
@@ -31,6 +32,7 @@
                     </a>
                 </div>
             </div>
+            --}}
         </div>
 
         <div class="navbar-end">
@@ -40,9 +42,11 @@
                         <i class="gg-search"></i>
                     </a>
 
+                    {{--
                     <a class="button is-ghost" href="/notifications">
                         <i class="gg-bell"></i>
                     </a>
+                    --}}
 
                     <a class="button is-ghost" href="/profile/show">
                         <i class="gg-profile"></i>
